@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated/clientes'
+import { Route as AuthenticatedComercialRouteImport } from './routes/_authenticated/comercial'
 import { Route as AuthenticatedConcorrentesRouteImport } from './routes/_authenticated/concorrentes'
 import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
 import { Route as AuthenticatedCustosRouteImport } from './routes/_authenticated/custos'
@@ -50,6 +51,11 @@ const AuthRoute = AuthRouteImport.update({
 const AuthenticatedClientesRoute = AuthenticatedClientesRouteImport.update({
   id: '/clientes',
   path: '/clientes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedComercialRoute = AuthenticatedComercialRouteImport.update({
+  id: '/comercial',
+  path: '/comercial',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedConcorrentesRoute =
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/clientes': typeof AuthenticatedClientesRoute
+  '/comercial': typeof AuthenticatedComercialRoute
   '/concorrentes': typeof AuthenticatedConcorrentesRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/custos': typeof AuthenticatedCustosRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/clientes': typeof AuthenticatedClientesRoute
+  '/comercial': typeof AuthenticatedComercialRoute
   '/concorrentes': typeof AuthenticatedConcorrentesRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/custos': typeof AuthenticatedCustosRoute
@@ -208,6 +216,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/clientes': typeof AuthenticatedClientesRoute
+  '/_authenticated/comercial': typeof AuthenticatedComercialRoute
   '/_authenticated/concorrentes': typeof AuthenticatedConcorrentesRoute
   '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/_authenticated/custos': typeof AuthenticatedCustosRoute
@@ -234,6 +243,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/clientes'
+    | '/comercial'
     | '/concorrentes'
     | '/configuracoes'
     | '/custos'
@@ -258,6 +268,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/clientes'
+    | '/comercial'
     | '/concorrentes'
     | '/configuracoes'
     | '/custos'
@@ -283,6 +294,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/clientes'
+    | '/_authenticated/comercial'
     | '/_authenticated/concorrentes'
     | '/_authenticated/configuracoes'
     | '/_authenticated/custos'
@@ -338,6 +350,13 @@ declare module '@tanstack/react-router' {
       path: '/clientes'
       fullPath: '/clientes'
       preLoaderRoute: typeof AuthenticatedClientesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/comercial': {
+      id: '/_authenticated/comercial'
+      path: '/comercial'
+      fullPath: '/comercial'
+      preLoaderRoute: typeof AuthenticatedComercialRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/concorrentes': {
@@ -478,6 +497,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedClientesRoute: typeof AuthenticatedClientesRoute
+  AuthenticatedComercialRoute: typeof AuthenticatedComercialRoute
   AuthenticatedConcorrentesRoute: typeof AuthenticatedConcorrentesRoute
   AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
   AuthenticatedCustosRoute: typeof AuthenticatedCustosRoute
@@ -501,6 +521,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedClientesRoute: AuthenticatedClientesRoute,
+  AuthenticatedComercialRoute: AuthenticatedComercialRoute,
   AuthenticatedConcorrentesRoute: AuthenticatedConcorrentesRoute,
   AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
   AuthenticatedCustosRoute: AuthenticatedCustosRoute,
