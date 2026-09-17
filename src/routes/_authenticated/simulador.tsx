@@ -30,7 +30,7 @@ function Simulador() {
 
   const mk = currentMonthKey();
   const costsThisMonth = useMemo(() => {
-    const found = allCosts.find((c) => ((c as any)._key ?? c.month) === mk);
+    const found = allCosts.find((c) => ((c as any)._key ?? c["month"]) === mk);
     return found || {};
   }, [allCosts, mk]);
 

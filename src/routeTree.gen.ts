@@ -17,6 +17,7 @@ import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authen
 import { Route as AuthenticatedCustosRouteImport } from './routes/_authenticated/custos'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDocumentacaoRouteImport } from './routes/_authenticated/documentacao'
+import { Route as AuthenticatedEntregasRouteImport } from './routes/_authenticated/entregas'
 import { Route as AuthenticatedEquipamentosRouteImport } from './routes/_authenticated/equipamentos'
 import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated/estoque'
 import { Route as AuthenticatedFaturamentoRouteImport } from './routes/_authenticated/faturamento'
@@ -27,6 +28,7 @@ import { Route as AuthenticatedMercadoRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedPedidosRouteImport } from './routes/_authenticated/pedidos'
 import { Route as AuthenticatedProducaoRouteImport } from './routes/_authenticated/producao'
 import { Route as AuthenticatedSanitarioRouteImport } from './routes/_authenticated/sanitario'
+import { Route as AuthenticatedSimuladorRouteImport } from './routes/_authenticated/simulador'
 import { Route as AuthenticatedSociosRouteImport } from './routes/_authenticated/socios'
 import { Route as AuthenticatedVisaoGeralRouteImport } from './routes/_authenticated/visao-geral'
 
@@ -72,6 +74,11 @@ const AuthenticatedDocumentacaoRoute =
     path: '/documentacao',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedEntregasRoute = AuthenticatedEntregasRouteImport.update({
+  id: '/entregas',
+  path: '/entregas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedEquipamentosRoute =
   AuthenticatedEquipamentosRouteImport.update({
     id: '/equipamentos',
@@ -125,6 +132,11 @@ const AuthenticatedSanitarioRoute = AuthenticatedSanitarioRouteImport.update({
   path: '/sanitario',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSimuladorRoute = AuthenticatedSimuladorRouteImport.update({
+  id: '/simulador',
+  path: '/simulador',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSociosRoute = AuthenticatedSociosRouteImport.update({
   id: '/socios',
   path: '/socios',
@@ -144,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/custos': typeof AuthenticatedCustosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/documentacao': typeof AuthenticatedDocumentacaoRoute
+  '/entregas': typeof AuthenticatedEntregasRoute
   '/equipamentos': typeof AuthenticatedEquipamentosRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
   '/faturamento': typeof AuthenticatedFaturamentoRoute
@@ -154,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/pedidos': typeof AuthenticatedPedidosRoute
   '/producao': typeof AuthenticatedProducaoRoute
   '/sanitario': typeof AuthenticatedSanitarioRoute
+  '/simulador': typeof AuthenticatedSimuladorRoute
   '/socios': typeof AuthenticatedSociosRoute
   '/visao-geral': typeof AuthenticatedVisaoGeralRoute
 }
@@ -165,6 +179,7 @@ export interface FileRoutesByTo {
   '/custos': typeof AuthenticatedCustosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/documentacao': typeof AuthenticatedDocumentacaoRoute
+  '/entregas': typeof AuthenticatedEntregasRoute
   '/equipamentos': typeof AuthenticatedEquipamentosRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
   '/faturamento': typeof AuthenticatedFaturamentoRoute
@@ -175,6 +190,7 @@ export interface FileRoutesByTo {
   '/pedidos': typeof AuthenticatedPedidosRoute
   '/producao': typeof AuthenticatedProducaoRoute
   '/sanitario': typeof AuthenticatedSanitarioRoute
+  '/simulador': typeof AuthenticatedSimuladorRoute
   '/socios': typeof AuthenticatedSociosRoute
   '/visao-geral': typeof AuthenticatedVisaoGeralRoute
 }
@@ -188,6 +204,7 @@ export interface FileRoutesById {
   '/_authenticated/custos': typeof AuthenticatedCustosRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/documentacao': typeof AuthenticatedDocumentacaoRoute
+  '/_authenticated/entregas': typeof AuthenticatedEntregasRoute
   '/_authenticated/equipamentos': typeof AuthenticatedEquipamentosRoute
   '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
   '/_authenticated/faturamento': typeof AuthenticatedFaturamentoRoute
@@ -198,6 +215,7 @@ export interface FileRoutesById {
   '/_authenticated/pedidos': typeof AuthenticatedPedidosRoute
   '/_authenticated/producao': typeof AuthenticatedProducaoRoute
   '/_authenticated/sanitario': typeof AuthenticatedSanitarioRoute
+  '/_authenticated/simulador': typeof AuthenticatedSimuladorRoute
   '/_authenticated/socios': typeof AuthenticatedSociosRoute
   '/_authenticated/visao-geral': typeof AuthenticatedVisaoGeralRoute
 }
@@ -211,6 +229,7 @@ export interface FileRouteTypes {
     | '/custos'
     | '/dashboard'
     | '/documentacao'
+    | '/entregas'
     | '/equipamentos'
     | '/estoque'
     | '/faturamento'
@@ -221,6 +240,7 @@ export interface FileRouteTypes {
     | '/pedidos'
     | '/producao'
     | '/sanitario'
+    | '/simulador'
     | '/socios'
     | '/visao-geral'
   fileRoutesByTo: FileRoutesByTo
@@ -232,6 +252,7 @@ export interface FileRouteTypes {
     | '/custos'
     | '/dashboard'
     | '/documentacao'
+    | '/entregas'
     | '/equipamentos'
     | '/estoque'
     | '/faturamento'
@@ -242,6 +263,7 @@ export interface FileRouteTypes {
     | '/pedidos'
     | '/producao'
     | '/sanitario'
+    | '/simulador'
     | '/socios'
     | '/visao-geral'
   id:
@@ -254,6 +276,7 @@ export interface FileRouteTypes {
     | '/_authenticated/custos'
     | '/_authenticated/dashboard'
     | '/_authenticated/documentacao'
+    | '/_authenticated/entregas'
     | '/_authenticated/equipamentos'
     | '/_authenticated/estoque'
     | '/_authenticated/faturamento'
@@ -264,6 +287,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pedidos'
     | '/_authenticated/producao'
     | '/_authenticated/sanitario'
+    | '/_authenticated/simulador'
     | '/_authenticated/socios'
     | '/_authenticated/visao-geral'
   fileRoutesById: FileRoutesById
@@ -330,6 +354,13 @@ declare module '@tanstack/react-router' {
       path: '/documentacao'
       fullPath: '/documentacao'
       preLoaderRoute: typeof AuthenticatedDocumentacaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/entregas': {
+      id: '/_authenticated/entregas'
+      path: '/entregas'
+      fullPath: '/entregas'
+      preLoaderRoute: typeof AuthenticatedEntregasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/equipamentos': {
@@ -402,6 +433,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSanitarioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/simulador': {
+      id: '/_authenticated/simulador'
+      path: '/simulador'
+      fullPath: '/simulador'
+      preLoaderRoute: typeof AuthenticatedSimuladorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/socios': {
       id: '/_authenticated/socios'
       path: '/socios'
@@ -425,6 +463,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCustosRoute: typeof AuthenticatedCustosRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDocumentacaoRoute: typeof AuthenticatedDocumentacaoRoute
+  AuthenticatedEntregasRoute: typeof AuthenticatedEntregasRoute
   AuthenticatedEquipamentosRoute: typeof AuthenticatedEquipamentosRoute
   AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
   AuthenticatedFaturamentoRoute: typeof AuthenticatedFaturamentoRoute
@@ -435,6 +474,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPedidosRoute: typeof AuthenticatedPedidosRoute
   AuthenticatedProducaoRoute: typeof AuthenticatedProducaoRoute
   AuthenticatedSanitarioRoute: typeof AuthenticatedSanitarioRoute
+  AuthenticatedSimuladorRoute: typeof AuthenticatedSimuladorRoute
   AuthenticatedSociosRoute: typeof AuthenticatedSociosRoute
   AuthenticatedVisaoGeralRoute: typeof AuthenticatedVisaoGeralRoute
 }
@@ -445,6 +485,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCustosRoute: AuthenticatedCustosRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDocumentacaoRoute: AuthenticatedDocumentacaoRoute,
+  AuthenticatedEntregasRoute: AuthenticatedEntregasRoute,
   AuthenticatedEquipamentosRoute: AuthenticatedEquipamentosRoute,
   AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
   AuthenticatedFaturamentoRoute: AuthenticatedFaturamentoRoute,
@@ -455,6 +496,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPedidosRoute: AuthenticatedPedidosRoute,
   AuthenticatedProducaoRoute: AuthenticatedProducaoRoute,
   AuthenticatedSanitarioRoute: AuthenticatedSanitarioRoute,
+  AuthenticatedSimuladorRoute: AuthenticatedSimuladorRoute,
   AuthenticatedSociosRoute: AuthenticatedSociosRoute,
   AuthenticatedVisaoGeralRoute: AuthenticatedVisaoGeralRoute,
 }

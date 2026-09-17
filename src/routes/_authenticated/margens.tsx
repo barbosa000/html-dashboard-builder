@@ -29,7 +29,7 @@ function Margens() {
   const costsByMonth = useMemo(() => {
     const map: Record<string, Record<string, any>> = {};
     allCosts.forEach((c) => {
-      const key = (c as any)._key ?? c.month;
+      const key = (c as any)._key ?? c["month"];
       if (key) map[key] = c;
     });
     return map;

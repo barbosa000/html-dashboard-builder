@@ -14,7 +14,7 @@ function Faturamento() {
   const mSales = useMemo(() => monthSales(sales, mk), [sales, mk]);
   const revenue = revenueOf(mSales);
   const avgTicket = mSales.length ? revenue / mSales.length : 0;
-  const paid = mSales.filter((s) => s.payment === "Pago").reduce((a, s) => a + (Number(s.total) || 0), 0);
+  const paid = mSales.filter((s) => s["payment"] === "Pago").reduce((a, s) => a + (Number(s["total"]) || 0), 0);
 
   const months = useMemo(() => allMonthKeys([], sales), [sales]);
   const series = useMemo(
@@ -29,11 +29,11 @@ function Faturamento() {
   const byClient = useMemo(() => {
     const map: Record<string, { orders: number; bags: number; rev: number }> = {};
     mSales.forEach((s) => {
-      const k = s.clientName || "—";
+      const k = s["clientName"] || "—";
       map[k] = map[k] || { orders: 0, bags: 0, rev: 0 };
       map[k].orders += 1;
-      map[k].bags += (Number(s.q2) || 0) + (Number(s.q5) || 0);
-      map[k].rev += Number(s.total) || 0;
+      map[k].bags += (Number(s["q2"]) || 0) + (Number(s["q5"]) || 0);
+      map[k].rev += Number(s["total"]) || 0;
     });
     return Object.entries(map)
       .sort((a, b) => b[1].rev - a[1].rev)
