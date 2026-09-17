@@ -13,15 +13,15 @@ function InvestimentosPage() {
   const { rows: investments } = useCollection("investments");
   const { rows: partners } = useCollection("partners");
 
-  const planned = investments.reduce((a, i) => a + (Number(i.plannedValue) || 0), 0);
-  const actual = investments.reduce((a, i) => a + (Number(i.actualValue) || Number(i.plannedValue) || 0), 0);
-  const partnersCapital = partners.reduce((a, p) => a + (Number(p.invested) || 0), 0);
+  const planned = investments.reduce((a, i) => a + (Number(i['plannedValue']) || 0), 0);
+  const actual = investments.reduce((a, i) => a + (Number(i['actualValue']) || Number(i['plannedValue']) || 0), 0);
+  const partnersCapital = partners.reduce((a, p) => a + (Number(p['invested']) || 0), 0);
   const remaining = partnersCapital - actual;
 
   const byCat: Record<string, number> = {};
   investments.forEach((i) => {
-    const cat = i.category || "Outros";
-    byCat[cat] = (byCat[cat] || 0) + (Number(i.actualValue) || Number(i.plannedValue) || 0);
+    const cat = i['category'] || "Outros";
+    byCat[cat] = (byCat[cat] || 0) + (Number(i['actualValue']) || Number(i['plannedValue']) || 0);
   });
   const chartData = Object.entries(byCat).map(([categoria, valor]) => ({ categoria, valor }));
 
@@ -78,9 +78,9 @@ function InvestimentosPage() {
           columns={[
             { key: "item", label: "Item" },
             { key: "category", label: "Categoria" },
-            { key: "plannedValue", label: "Planejado", render: (r) => brl(r.plannedValue) },
-            { key: "actualValue", label: "Real", render: (r) => brl(r.actualValue) },
-            { key: "status", label: "Status", render: (r) => <Chip value={r.status} /> },
+            { key: "plannedValue", label: "Planejado", render: (r) => brl(r['plannedValue']) },
+            { key: "actualValue", label: "Real", render: (r) => brl(r['actualValue']) },
+            { key: "status", label: "Status", render: (r) => <Chip value={r['status']} /> },
           ]}
         />
       </div>

@@ -9,9 +9,9 @@ export const Route = createFileRoute("/_authenticated/socios")({ component: Soci
 function SociosPage() {
   const { rows: partners } = useCollection("partners");
 
-  const totalInvested = partners.reduce((a, p) => a + (Number(p.invested) || 0), 0);
-  const totalPct = partners.reduce((a, p) => a + (Number(p.percent) || 0), 0);
-  const ativos = partners.filter((p) => p.status === "Ativo").length;
+  const totalInvested = partners.reduce((a, p) => a + (Number(p['invested']) || 0), 0);
+  const totalPct = partners.reduce((a, p) => a + (Number(p['percent']) || 0), 0);
+  const ativos = partners.filter((p) => p['status'] === "Ativo").length;
   const pctOk = Math.abs(totalPct - 100) < 0.01;
 
   return (
@@ -41,14 +41,14 @@ function SociosPage() {
           {partners.map((p) => (
             <div key={p.id} className="panel p-4">
               <div className="flex items-start justify-between gap-2">
-                <span className="text-sm font-semibold">{p.name}</span>
-                <Chip value={p.status || "Ativo"} />
+                <span className="text-sm font-semibold">{p['name']}</span>
+                <Chip value={p['status'] || "Ativo"} />
               </div>
               <div className="num mt-1.5 text-2xl font-semibold">
-                {numFmt(p.percent, 2)}%<span className="ml-1 text-xs font-normal text-muted-foreground">participação</span>
+                {numFmt(p['percent'], 2)}%<span className="ml-1 text-xs font-normal text-muted-foreground">participação</span>
               </div>
               <div className="mt-1 text-xs text-muted-foreground">
-                {brl(p.invested)} investidos · {p.role || "—"}
+                {brl(p['invested'])} investidos · {p['role'] || "—"}
               </div>
             </div>
           ))}
@@ -76,9 +76,9 @@ function SociosPage() {
           columns={[
             { key: "name", label: "Nome" },
             { key: "role", label: "Função" },
-            { key: "percent", label: "%", render: (r) => `${numFmt(r.percent, 2)}%` },
-            { key: "invested", label: "Investido", render: (r) => brl(r.invested) },
-            { key: "status", label: "Status", render: (r) => <Chip value={r.status} /> },
+            { key: "percent", label: "%", render: (r) => `${numFmt(r['percent'], 2)}%` },
+            { key: "invested", label: "Investido", render: (r) => brl(r['invested']) },
+            { key: "status", label: "Status", render: (r) => <Chip value={r['status']} /> },
           ]}
         />
       </div>

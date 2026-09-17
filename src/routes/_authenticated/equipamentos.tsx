@@ -53,10 +53,10 @@ function EquipamentosPage() {
         ]}
         columns={[
           { key: "name", label: "Equipamento" },
-          { key: "capacity", label: "Capacidade", render: (r) => (r.capacity ? `${r.capacity} kg/dia` : "—") },
-          { key: "consumption", label: "Consumo", render: (r) => (r.consumption ? `${r.consumption} kWh` : "—") },
+          { key: "capacity", label: "Capacidade", render: (r) => (r['capacity'] ? `${r['capacity']} kg/dia` : "—") },
+          { key: "consumption", label: "Consumo", render: (r) => (r['consumption'] ? `${r['consumption']} kWh` : "—") },
           { key: "maintenance", label: "Manutenção" },
-          { key: "status", label: "Status", render: (r) => <Chip value={r.status} /> },
+          { key: "status", label: "Status", render: (r) => <Chip value={r['status']} /> },
         ]}
       />
     </div>
