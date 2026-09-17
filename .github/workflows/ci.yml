@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Type check
+        run: bun run typecheck
+
+      - name: Build
+        run: bun run build
+
+      # Lint is informational for now — the codebase carries pre-existing
+      # `no-explicit-any` and formatting debt that isn't worth blocking
+      # merges on until it's cleaned up on purpose. Type check + build are
+      # the real regression gates.
+      - name: Lint (non-blocking)
+        run: bun run lint
+        continue-on-error: true

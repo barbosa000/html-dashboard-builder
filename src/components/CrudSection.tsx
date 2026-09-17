@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { Panel, SectionTitle, DataTable, Td } from "@/components/ui-kit";
+import { Panel, SectionTitle, DataTable, Td, ExportCsvButton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useCollection, type Row } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { downloadCsv } from "@/lib/export";
+import { todayStr } from "@/lib/domain";
 import { toast } from "sonner";
 
 export type CrudField = {
@@ -106,6 +108,16 @@ export function CrudSection({
     }
   }
 
+  function exportCsv() {
+    if (rows.length === 0) {
+      toast.error("Não há registros para exportar.");
+      return;
+    }
+    const headers = columns.map((c) => c.label);
+    const data = rows.map((r) => columns.map((c) => r[c.key] ?? ""));
+    downloadCsv(`${collection}-${todayStr()}.csv`, headers, data);
+  }
+
   return (
     <div>
       <Panel title={title} subtitle={subtitle}>
@@ -165,7 +177,16 @@ export function CrudSection({
         </form>
       </Panel>
 
-      <SectionTitle hint={`${rows.length} registro(s)`}>{listTitle}</SectionTitle>
+      <SectionTitle
+        hint={
+          <span className="flex items-center gap-3">
+            <span>{rows.length} registro(s)</span>
+            <ExportCsvButton onExport={exportCsv} />
+          </span>
+        }
+      >
+        {listTitle}
+      </SectionTitle>
       <DataTable
         columns={[...columns.map((c) => c.label), ""]}
         isEmpty={rows.length === 0}

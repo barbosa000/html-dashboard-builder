@@ -16,6 +16,14 @@ dist-ssr
 .nitro
 *.local
 
+# Environment variables — never commit real credentials.
+# .env is intentionally still tracked in this repo (see .env.example for
+# the reasoning) — this only stops *new* local env files from slipping in.
+.env.local
+.env.*.local
+.env.development
+.env.production
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars

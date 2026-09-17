@@ -1,8 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Kpi, PageHeader, Panel, SectionTitle, DataTable, Td } from "@/components/ui-kit";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import {
+  Kpi,
+  PageHeader,
+  Panel,
+  SectionTitle,
+  DataTable,
+  Td,
+  ExportCsvButton,
+} from "@/components/ui-kit";
 import { useCollection, useDoc } from "@/lib/store";
+import { downloadCsv } from "@/lib/export";
+import { toast } from "sonner";
 import {
   allMonthKeys,
   brl,
@@ -14,6 +32,7 @@ import {
   numFmt,
   pct,
   revenueOf,
+  todayStr,
   type Settings,
 } from "@/lib/domain";
 
@@ -50,18 +69,45 @@ function Margens() {
   const mk = currentMonthKey();
   const current = series.find((s) => s.mk === mk);
 
-  const margin2 = settings.price2 ? ((settings.price2 - (settings.varCost2 || 0)) / settings.price2) * 100 : null;
-  const margin5 = settings.price5 ? ((settings.price5 - (settings.varCost5 || 0)) / settings.price5) * 100 : null;
+  const margin2 = settings.price2
+    ? ((settings.price2 - (settings.varCost2 || 0)) / settings.price2) * 100
+    : null;
+  const margin5 = settings.price5
+    ? ((settings.price5 - (settings.varCost5 || 0)) / settings.price5) * 100
+    : null;
+
+  function exportCsv() {
+    if (series.length === 0) {
+      toast.error("Não há dados para exportar.");
+      return;
+    }
+    downloadCsv(
+      `resultado-mensal-${todayStr()}.csv`,
+      ["Mês", "Receita", "Custos", "Resultado", "Margem (%)"],
+      series.map((s) => [s.label, s.revenue, s.custos, s.result, numFmt(s.margin, 1)]),
+    );
+  }
 
   return (
     <div>
-      <PageHeader title="Margens" description="Evolução da margem operacional e margem por produto." />
+      <PageHeader
+        title="Margens"
+        description="Evolução da margem operacional e margem por produto."
+      />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Kpi label="Receita do mês" value={brl(current?.revenue ?? 0)} />
         <Kpi label="Custos do mês" value={brl(current?.custos ?? 0)} />
-        <Kpi label="Resultado do mês" value={brl(current?.result ?? 0)} tone={(current?.result ?? 0) >= 0 ? "good" : "critical"} />
-        <Kpi label="Margem do mês" value={pct(current?.margin ?? 0)} tone={(current?.margin ?? 0) < 10 ? "warn" : "good"} />
+        <Kpi
+          label="Resultado do mês"
+          value={brl(current?.result ?? 0)}
+          tone={(current?.result ?? 0) >= 0 ? "good" : "critical"}
+        />
+        <Kpi
+          label="Margem do mês"
+          value={pct(current?.margin ?? 0)}
+          tone={(current?.margin ?? 0) < 10 ? "warn" : "good"}
+        />
       </div>
 
       <SectionTitle>Margem por produto (Configurações)</SectionTitle>
@@ -115,16 +161,34 @@ function Margens() {
             <LineChart data={series}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis dataKey="label" stroke="var(--muted-foreground)" fontSize={12} />
-              <YAxis stroke="var(--muted-foreground)" fontSize={12} tickFormatter={(v) => `${v}%`} />
-              <Tooltip formatter={(v: number) => pct(v)} contentStyle={{ background: "var(--surface-2)", border: "1px solid var(--border)" }} />
-              <Line type="monotone" dataKey="margin" name="Margem (%)" stroke="var(--chart-2)" strokeWidth={2} dot={{ r: 3 }} />
+              <YAxis
+                stroke="var(--muted-foreground)"
+                fontSize={12}
+                tickFormatter={(v) => `${v}%`}
+              />
+              <Tooltip
+                formatter={(v: number) => pct(v)}
+                contentStyle={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}
+              />
+              <Line
+                type="monotone"
+                dataKey="margin"
+                name="Margem (%)"
+                stroke="var(--chart-2)"
+                strokeWidth={2}
+                dot={{ r: 3 }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </Panel>
 
-      <SectionTitle>Resultado por mês</SectionTitle>
-      <DataTable columns={["Mês", "Receita", "Custos", "Resultado", "Margem"]} isEmpty={series.length === 0} empty="Sem dados suficientes ainda.">
+      <SectionTitle hint={<ExportCsvButton onExport={exportCsv} />}>Resultado por mês</SectionTitle>
+      <DataTable
+        columns={["Mês", "Receita", "Custos", "Resultado", "Margem"]}
+        isEmpty={series.length === 0}
+        empty="Sem dados suficientes ainda."
+      >
         {series.map((s) => (
           <tr key={s.mk}>
             <Td>{s.label}</Td>

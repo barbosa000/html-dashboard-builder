@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -58,6 +59,19 @@ export function ConfirmDeleteButton({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  );
+}
+
+/* ---------- Botão de exportar CSV ---------- */
+export function ExportCsvButton({ onExport }: { onExport: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onExport}
+      className="flex items-center gap-1 text-primary hover:underline"
+    >
+      <Download className="h-3 w-3" /> Exportar CSV
+    </button>
   );
 }
 

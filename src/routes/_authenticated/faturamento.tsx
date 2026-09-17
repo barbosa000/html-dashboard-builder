@@ -1,9 +1,37 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Kpi, PageHeader, Panel, SectionTitle, DataTable, Td } from "@/components/ui-kit";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import {
+  Kpi,
+  PageHeader,
+  Panel,
+  SectionTitle,
+  DataTable,
+  Td,
+  ExportCsvButton,
+} from "@/components/ui-kit";
 import { useCollection } from "@/lib/store";
-import { activeSales, allMonthKeys, brl, currentMonthKey, monthLabel, monthSales, numFmt, revenueOf } from "@/lib/domain";
+import { downloadCsv } from "@/lib/export";
+import { toast } from "sonner";
+import {
+  activeSales,
+  allMonthKeys,
+  brl,
+  currentMonthKey,
+  monthLabel,
+  monthSales,
+  numFmt,
+  revenueOf,
+  todayStr,
+} from "@/lib/domain";
 
 export const Route = createFileRoute("/_authenticated/faturamento")({ component: Faturamento });
 
@@ -14,7 +42,9 @@ function Faturamento() {
   const mSales = useMemo(() => monthSales(sales, mk), [sales, mk]);
   const revenue = revenueOf(mSales);
   const avgTicket = mSales.length ? revenue / mSales.length : 0;
-  const paid = mSales.filter((s) => s["payment"] === "Pago").reduce((a, s) => a + (Number(s["total"]) || 0), 0);
+  const paid = mSales
+    .filter((s) => s["payment"] === "Pago")
+    .reduce((a, s) => a + (Number(s["total"]) || 0), 0);
 
   const months = useMemo(() => allMonthKeys([], sales), [sales]);
   const series = useMemo(
@@ -40,6 +70,30 @@ function Faturamento() {
       .slice(0, 10);
   }, [mSales]);
 
+  function exportMonthlyCsv() {
+    if (series.length === 0) {
+      toast.error("Não há dados para exportar.");
+      return;
+    }
+    downloadCsv(
+      `faturamento-mensal-${todayStr()}.csv`,
+      ["Mês", "Pedidos", "Faturamento"],
+      series.map((s) => [s.label, s.orders, s.revenue]),
+    );
+  }
+
+  function exportTopClientsCsv() {
+    if (byClient.length === 0) {
+      toast.error("Não há vendas neste mês para exportar.");
+      return;
+    }
+    downloadCsv(
+      `top-clientes-${monthLabel(mk)}.csv`,
+      ["Cliente", "Pedidos", "Sacos", "Faturamento"],
+      byClient.map(([name, d]) => [name, d.orders, d.bags, d.rev]),
+    );
+  }
+
   return (
     <div>
       <PageHeader title="Faturamento" description="Receita diária, mensal e por cliente." />
@@ -58,16 +112,36 @@ function Faturamento() {
             <LineChart data={series}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis dataKey="label" stroke="var(--muted-foreground)" fontSize={12} />
-              <YAxis stroke="var(--muted-foreground)" fontSize={12} tickFormatter={(v) => `R$ ${numFmt(v)}`} />
-              <Tooltip formatter={(v: number) => brl(v)} contentStyle={{ background: "var(--surface-2)", border: "1px solid var(--border)" }} />
-              <Line type="monotone" dataKey="revenue" name="Faturamento" stroke="var(--chart-1)" strokeWidth={2} dot={{ r: 3 }} />
+              <YAxis
+                stroke="var(--muted-foreground)"
+                fontSize={12}
+                tickFormatter={(v) => `R$ ${numFmt(v)}`}
+              />
+              <Tooltip
+                formatter={(v: number) => brl(v)}
+                contentStyle={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}
+              />
+              <Line
+                type="monotone"
+                dataKey="revenue"
+                name="Faturamento"
+                stroke="var(--chart-1)"
+                strokeWidth={2}
+                dot={{ r: 3 }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </Panel>
 
-      <SectionTitle>Top clientes do mês</SectionTitle>
-      <DataTable columns={["Cliente", "Pedidos", "Sacos", "Faturamento"]} isEmpty={byClient.length === 0} empty="Sem vendas registradas neste mês.">
+      <SectionTitle hint={<ExportCsvButton onExport={exportTopClientsCsv} />}>
+        Top clientes do mês
+      </SectionTitle>
+      <DataTable
+        columns={["Cliente", "Pedidos", "Sacos", "Faturamento"]}
+        isEmpty={byClient.length === 0}
+        empty="Sem vendas registradas neste mês."
+      >
         {byClient.map(([name, d]) => (
           <tr key={name}>
             <Td>{name}</Td>
@@ -78,7 +152,9 @@ function Faturamento() {
         ))}
       </DataTable>
 
-      <SectionTitle>Detalhamento mensal</SectionTitle>
+      <SectionTitle hint={<ExportCsvButton onExport={exportMonthlyCsv} />}>
+        Detalhamento mensal
+      </SectionTitle>
       <DataTable columns={["Mês", "Pedidos", "Faturamento"]} isEmpty={series.length === 0}>
         {series.map((s) => (
           <tr key={s.mk}>

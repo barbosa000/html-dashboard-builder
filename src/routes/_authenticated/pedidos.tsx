@@ -9,11 +9,13 @@ import {
   Td,
   SectionTitle,
   ConfirmDeleteButton,
+  ExportCsvButton,
 } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCollection, useDoc } from "@/lib/store";
+import { downloadCsv } from "@/lib/export";
 import { toast } from "sonner";
 import {
   DEFAULT_SETTINGS,
@@ -106,6 +108,27 @@ function PedidosPage() {
     () => [...sales].sort((a, b) => String(b.date).localeCompare(String(a.date))),
     [sales],
   );
+
+  function exportCsv() {
+    if (sorted.length === 0) {
+      toast.error("Não há pedidos para exportar.");
+      return;
+    }
+    downloadCsv(
+      `pedidos-${todayStr()}.csv`,
+      ["Data", "Cliente", "Sacos 2kg", "Sacos 5kg", "Desconto", "Total", "Status", "Pagamento"],
+      sorted.map((s) => [
+        fmtDateBR(s.date),
+        s.clientName || "",
+        s.q2 ?? 0,
+        s.q5 ?? 0,
+        s.desconto ?? 0,
+        s.total ?? 0,
+        s.status || "",
+        s.payment || "",
+      ]),
+    );
+  }
 
   return (
     <div>
@@ -249,7 +272,16 @@ function PedidosPage() {
         </form>
       </Panel>
 
-      <SectionTitle hint={`${sorted.length} registro(s)`}>Pedidos</SectionTitle>
+      <SectionTitle
+        hint={
+          <span className="flex items-center gap-3">
+            <span>{sorted.length} registro(s)</span>
+            <ExportCsvButton onExport={exportCsv} />
+          </span>
+        }
+      >
+        Pedidos
+      </SectionTitle>
       <DataTable
         columns={["Data", "Cliente", "2 kg", "5 kg", "Total", "Status", "Pagamento", ""]}
         isEmpty={sorted.length === 0}

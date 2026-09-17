@@ -1,11 +1,21 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { PageHeader, Panel, Kpi, DataTable, Td, SectionTitle } from "@/components/ui-kit";
+import {
+  PageHeader,
+  Panel,
+  Kpi,
+  DataTable,
+  Td,
+  SectionTitle,
+  ExportCsvButton,
+} from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCollection, useDoc, type Row } from "@/lib/store";
+import { downloadCsv } from "@/lib/export";
+import { toast } from "sonner";
 import {
   DEFAULT_SETTINGS,
   bagsFromKg,
@@ -49,6 +59,25 @@ function ProducaoPage() {
     () => [...rows].sort((a, b) => String(b.date).localeCompare(String(a.date))),
     [rows],
   );
+
+  function exportCsv() {
+    if (sorted.length === 0) {
+      toast.error("Não há produção lançada para exportar.");
+      return;
+    }
+    downloadCsv(
+      `producao-${todayStr()}.csv`,
+      ["Data", "kg", "Sacos 2kg", "Sacos 5kg", "Perdas", "Observação"],
+      sorted.map((p) => [
+        fmtDateBR(p.date),
+        p.kg ?? 0,
+        p.q2 ?? 0,
+        p.q5 ?? 0,
+        p.perda ?? 0,
+        p.obs || "",
+      ]),
+    );
+  }
 
   function reset() {
     setForm(emptyForm(settings.mix2));
@@ -203,7 +232,16 @@ function ProducaoPage() {
         </Panel>
       </div>
 
-      <SectionTitle hint={`${sorted.length} registro(s)`}>Histórico de produção</SectionTitle>
+      <SectionTitle
+        hint={
+          <span className="flex items-center gap-3">
+            <span>{sorted.length} registro(s)</span>
+            <ExportCsvButton onExport={exportCsv} />
+          </span>
+        }
+      >
+        Histórico de produção
+      </SectionTitle>
       <DataTable
         columns={["Data", "kg", "Sacos 2 kg", "Sacos 5 kg", "Perdas", "Eficiência", "Obs.", ""]}
         isEmpty={sorted.length === 0}

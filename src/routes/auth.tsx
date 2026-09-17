@@ -14,7 +14,10 @@ export const Route = createFileRoute("/auth")({
       { title: "Entrar — OS PIA do Gelo" },
       { name: "description", content: "Acesse o painel de gestão da fábrica de gelo GELO RMC." },
       { property: "og:title", content: "Entrar — OS PIA do Gelo" },
-      { property: "og:description", content: "Acesse o painel de gestão da fábrica de gelo GELO RMC." },
+      {
+        property: "og:description",
+        content: "Acesse o painel de gestão da fábrica de gelo GELO RMC.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -24,7 +27,7 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "reset">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,7 +42,14 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      if (mode === "signup") {
+      if (mode === "reset") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        toast.success("Enviamos um link de redefinição para o seu e-mail.");
+        setMode("signin");
+      } else if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -60,7 +70,9 @@ function AuthPage() {
   }
 
   async function google() {
-    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
+    });
     if (result.error) {
       toast.error("Falha ao entrar com Google.");
       return;
@@ -87,24 +99,51 @@ function AuthPage() {
             <Label>E-mail</Label>
             <Input type="email" value={email} required onChange={(e) => setEmail(e.target.value)} />
           </div>
-          <div className="space-y-1.5">
-            <Label>Senha</Label>
-            <Input type="password" value={password} required minLength={6} onChange={(e) => setPassword(e.target.value)} />
-          </div>
+          {mode !== "reset" && (
+            <div className="space-y-1.5">
+              <Label>Senha</Label>
+              <Input
+                type="password"
+                value={password}
+                required
+                minLength={6}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          )}
           <Button type="submit" className="w-full" disabled={loading}>
-            {mode === "signin" ? "Entrar" : "Criar conta"}
+            {mode === "signin"
+              ? "Entrar"
+              : mode === "signup"
+                ? "Criar conta"
+                : "Enviar link de redefinição"}
           </Button>
+          {mode === "signin" && (
+            <button
+              type="button"
+              className="w-full text-center text-xs text-muted-foreground hover:text-foreground"
+              onClick={() => setMode("reset")}
+            >
+              Esqueceu a senha?
+            </button>
+          )}
         </form>
 
-        <Button variant="outline" className="mt-3 w-full" onClick={google}>
-          Continuar com Google
-        </Button>
+        {mode !== "reset" && (
+          <Button variant="outline" className="mt-3 w-full" onClick={google}>
+            Continuar com Google
+          </Button>
+        )}
 
         <button
           className="mt-4 w-full text-center text-xs text-muted-foreground hover:text-foreground"
           onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
         >
-          {mode === "signin" ? "Não tem conta? Criar agora" : "Já tem conta? Entrar"}
+          {mode === "reset"
+            ? "Voltar para o login"
+            : mode === "signin"
+              ? "Não tem conta? Criar agora"
+              : "Já tem conta? Entrar"}
         </button>
       </div>
     </div>
