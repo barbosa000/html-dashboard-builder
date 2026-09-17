@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated/clientes'
 import { Route as AuthenticatedConcorrentesRouteImport } from './routes/_authenticated/concorrentes'
 import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
 import { Route as AuthenticatedCustosRouteImport } from './routes/_authenticated/custos'
@@ -45,6 +46,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedClientesRoute = AuthenticatedClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedConcorrentesRoute =
   AuthenticatedConcorrentesRouteImport.update({
@@ -151,6 +157,7 @@ const AuthenticatedVisaoGeralRoute = AuthenticatedVisaoGeralRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/clientes': typeof AuthenticatedClientesRoute
   '/concorrentes': typeof AuthenticatedConcorrentesRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/custos': typeof AuthenticatedCustosRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/clientes': typeof AuthenticatedClientesRoute
   '/concorrentes': typeof AuthenticatedConcorrentesRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/custos': typeof AuthenticatedCustosRoute
@@ -199,6 +207,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/clientes': typeof AuthenticatedClientesRoute
   '/_authenticated/concorrentes': typeof AuthenticatedConcorrentesRoute
   '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/_authenticated/custos': typeof AuthenticatedCustosRoute
@@ -224,6 +233,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/clientes'
     | '/concorrentes'
     | '/configuracoes'
     | '/custos'
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/clientes'
     | '/concorrentes'
     | '/configuracoes'
     | '/custos'
@@ -271,6 +282,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/clientes'
     | '/_authenticated/concorrentes'
     | '/_authenticated/configuracoes'
     | '/_authenticated/custos'
@@ -320,6 +332,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/clientes': {
+      id: '/_authenticated/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof AuthenticatedClientesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/concorrentes': {
       id: '/_authenticated/concorrentes'
@@ -458,6 +477,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedClientesRoute: typeof AuthenticatedClientesRoute
   AuthenticatedConcorrentesRoute: typeof AuthenticatedConcorrentesRoute
   AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
   AuthenticatedCustosRoute: typeof AuthenticatedCustosRoute
@@ -480,6 +500,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedClientesRoute: AuthenticatedClientesRoute,
   AuthenticatedConcorrentesRoute: AuthenticatedConcorrentesRoute,
   AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
   AuthenticatedCustosRoute: AuthenticatedCustosRoute,
