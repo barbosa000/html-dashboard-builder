@@ -23,12 +23,16 @@ export function currentMonthKey() {
 }
 export function monthLabel(mk: string) {
   if (!mk) return "";
-  const [y, m] = mk.split("-");
+  const parts = mk.split("-");
+  const y = parts[0] ?? "";
+  const m = parts[1] ?? "1";
   const names = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
   return `${names[parseInt(m, 10) - 1]}/${y.slice(2)}`;
 }
 export function addMonths(mk: string, n: number) {
-  const [y, m] = mk.split("-").map(Number);
+  const parts = mk.split("-").map(Number);
+  const y = parts[0] ?? new Date().getFullYear();
+  const m = parts[1] ?? 1;
   const d = new Date(y, m - 1 + n, 1);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
