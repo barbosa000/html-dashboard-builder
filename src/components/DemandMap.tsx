@@ -47,15 +47,21 @@ function intensityClass(count: number, max: number) {
   if (max <= 0 || count <= 0) return "border-2 border-dashed border-border bg-transparent";
   const ratio = count / max;
   if (ratio >= 0.66)
-    return "border-transparent bg-primary/80 text-primary-foreground shadow-[0_0_0_6px_var(--color-primary)]/10";
+    return "border-transparent bg-primary/80 text-primary-foreground shadow-[0_0_0_6px_oklch(0.85_0.13_199_/_16%)]";
   if (ratio >= 0.33) return "border-transparent bg-primary/45 text-foreground";
   return "border-transparent bg-primary/20 text-foreground";
 }
 
 function diameter(count: number, max: number) {
-  const base = 64;
-  const extra = max > 0 ? Math.round(Math.sqrt(count / max) * 96) : 0;
+  const base = 52;
+  const extra = max > 0 ? Math.round(Math.sqrt(count / max) * 68) : 0;
   return base + extra;
+}
+
+/** Trava o diâmetro em px, mas nunca deixa passar de uma fração da largura
+ * do contêiner (via vw) — evita bolhas se sobrepondo em telas estreitas. */
+function sizeStyle(px: number, vwCap: number) {
+  return `min(${px}px, ${vwCap}vw)`;
 }
 
 export function DemandMap() {
@@ -101,15 +107,15 @@ export function DemandMap() {
         <div className="relative h-72 w-full overflow-hidden rounded-xl bg-surface-2/40 sm:h-80">
           {/* Anel da Região Metropolitana, ao redor de Curitiba */}
           <div
-            className={`absolute top-[52%] left-[58%] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed transition-all ${
+            className={`absolute top-[56%] left-[66%] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed transition-all ${
               rmc.clientCount > 0 ? "border-accent/60" : "border-border"
             }`}
             style={{
-              width: diameter(rmc.clientCount, maxClients) + 90,
-              height: diameter(rmc.clientCount, maxClients) + 90,
+              width: sizeStyle(diameter(rmc.clientCount, maxClients) + 70, 62),
+              height: sizeStyle(diameter(rmc.clientCount, maxClients) + 70, 62),
             }}
           />
-          <span className="absolute top-[18%] left-[58%] -translate-x-1/2 text-[11px] font-medium text-muted-foreground">
+          <span className="absolute top-[14%] left-[66%] -translate-x-1/2 text-center text-[11px] font-medium text-nowrap text-muted-foreground">
             Região Metropolitana
           </span>
 
@@ -118,7 +124,8 @@ export function DemandMap() {
             label="Campo Magro"
             stat={campoMagro}
             max={maxClients}
-            style={{ top: "38%", left: "22%" }}
+            style={{ top: "62%", left: "18%" }}
+            vwCap={24}
           />
 
           {/* Curitiba */}
@@ -126,7 +133,8 @@ export function DemandMap() {
             label="Curitiba"
             stat={curitiba}
             max={maxClients}
-            style={{ top: "52%", left: "58%" }}
+            style={{ top: "56%", left: "66%" }}
+            vwCap={27}
             emphasize
           />
         </div>
@@ -211,15 +219,18 @@ function RegionBubble({
   stat,
   max,
   style,
+  vwCap,
   emphasize,
 }: {
   label: string;
   stat: RegionStat;
   max: number;
   style: { top: string; left: string };
+  vwCap: number;
   emphasize?: boolean;
 }) {
-  const size = diameter(stat.clientCount, max) * (emphasize ? 1.15 : 1);
+  const px = Math.round(diameter(stat.clientCount, max) * (emphasize ? 1.1 : 1));
+  const size = sizeStyle(px, vwCap);
   return (
     <div
       className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-0.5 rounded-full text-center transition-all duration-500"
@@ -231,7 +242,7 @@ function RegionBubble({
         <span className="num text-sm font-bold">{numFmt(stat.clientCount)}</span>
         <span className="text-[10px] opacity-80">cliente(s)</span>
       </div>
-      <span className="absolute -bottom-5 text-[11px] font-medium whitespace-nowrap text-foreground">
+      <span className="absolute -bottom-5 text-[11px] font-medium text-nowrap text-foreground">
         {label}
       </span>
     </div>

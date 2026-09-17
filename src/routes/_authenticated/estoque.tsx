@@ -57,7 +57,7 @@ function MovementsForm({ supplies }: { supplies: any[] }) {
 
   return (
     <Panel title="Movimentações de estoque">
-      <form onSubmit={submit} className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+      <form onSubmit={submit} className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <div className="col-span-2 space-y-1.5">
           <Label className="text-xs text-muted-foreground">Item</Label>
           <select

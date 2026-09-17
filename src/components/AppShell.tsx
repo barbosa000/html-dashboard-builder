@@ -133,15 +133,19 @@ export function AppShell({ children }: { children: ReactNode }) {
               busy ? "scale-x-100 animate-pulse" : "scale-x-0",
             )}
           />
-          <button className="lg:hidden" onClick={() => setOpen(true)} aria-label="Abrir menu">
+          <button
+            className="shrink-0 lg:hidden"
+            onClick={() => setOpen(true)}
+            aria-label="Abrir menu"
+          >
             <Menu className="h-5 w-5" />
           </button>
-          <h2 className="font-display text-base font-semibold">
+          <h2 className="min-w-0 flex-1 truncate font-display text-base font-semibold sm:flex-none">
             {LABEL_BY_SLUG[slug] ?? "Painel"}
           </h2>
           <button
             onClick={() => setCmdOpen(true)}
-            className="ml-2 flex items-center gap-2 rounded-lg border border-border bg-surface-2/60 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground sm:ml-4"
+            className="ml-2 flex shrink-0 items-center gap-2 rounded-lg border border-border bg-surface-2/60 px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground sm:ml-4 sm:px-3"
           >
             <Search className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Buscar módulo, cliente…</span>
@@ -149,7 +153,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               ⌘K
             </kbd>
           </button>
-          <div className="ml-auto hidden text-xs text-muted-foreground capitalize sm:block">
+          <div className="ml-auto hidden shrink-0 text-xs text-muted-foreground capitalize sm:block">
             {today}
           </div>
         </header>

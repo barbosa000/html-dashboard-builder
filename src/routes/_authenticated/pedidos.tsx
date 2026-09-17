@@ -135,7 +135,7 @@ function PedidosPage() {
       </div>
 
       <Panel className="mt-6" title="Registrar pedido">
-        <form onSubmit={submit} className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <form onSubmit={submit} className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">Data</Label>
             <Input
