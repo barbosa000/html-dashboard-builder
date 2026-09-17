@@ -47,7 +47,7 @@ function intensityClass(count: number, max: number) {
   if (max <= 0 || count <= 0) return "border-2 border-dashed border-border bg-transparent";
   const ratio = count / max;
   if (ratio >= 0.66)
-    return "border-transparent bg-primary/80 text-primary-foreground shadow-[0_0_0_6px_oklch(0.85_0.13_199_/_16%)]";
+    return "border-transparent bg-primary/80 text-primary-foreground shadow-[0_0_0_6px_color-mix(in_oklab,var(--color-primary)_16%,transparent)]";
   if (ratio >= 0.33) return "border-transparent bg-primary/45 text-foreground";
   return "border-transparent bg-primary/20 text-foreground";
 }

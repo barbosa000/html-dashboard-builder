@@ -4,7 +4,7 @@ import { NAV, LABEL_BY_SLUG } from "@/lib/nav";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Menu, X, LogOut, Search } from "lucide-react";
+import { Menu, X, LogOut, Search, Sun, Moon } from "lucide-react";
 import { useIsFetching, useIsMutating, useQueryClient } from "@tanstack/react-query";
 import {
   CommandDialog,
@@ -14,10 +14,12 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { setStoredTheme } from "@/lib/theme";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
+  const [dark, setDark] = useState(true);
   const navigate = useNavigate();
   const qc = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -36,6 +38,19 @@ export function AppShell({ children }: { children: ReactNode }) {
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
+
+  // O script inline em __root.tsx já aplicou a classe antes da hidratação;
+  // aqui só sincronizamos o estado do React com o que já está no DOM.
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains("dark"));
+  }, []);
+
+  function toggleTheme() {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    setStoredTheme(next);
+  }
 
   function goTo(itemSlug: string) {
     setCmdOpen(false);
@@ -112,6 +127,14 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         ))}
 
+        <Button
+          variant="ghost"
+          className="w-full justify-start gap-2 text-muted-foreground"
+          onClick={toggleTheme}
+        >
+          {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          {dark ? "Tema claro" : "Tema escuro"}
+        </Button>
         <Button
           variant="ghost"
           className="w-full justify-start gap-2 text-muted-foreground"
