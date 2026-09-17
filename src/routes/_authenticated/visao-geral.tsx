@@ -41,7 +41,7 @@ function VisaoGeral() {
   const totalKg = production.reduce((a, p) => a + (Number(p.kg) || 0), 0);
   const totalRevenue = revenueOf(sales.filter((s) => s.status !== "Cancelado"));
   const activeClients = clients.filter((c) => c.status === "Cliente" || c.status === "Recorrente").length;
-  const investTotal = investments.reduce((a, i) => a + (Number(i.value) || 0), 0);
+  const investTotal = investments.reduce((a, i) => a + (Number(i.actualValue) || Number(i.plannedValue) || 0), 0);
   const done = CHECK_ITEMS.filter(([k]) => checklist?.[k]?.status === "Concluído").length;
   const mk = currentMonthKey();
 

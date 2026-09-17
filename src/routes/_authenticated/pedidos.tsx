@@ -48,7 +48,7 @@ function PedidosPage() {
   const byStatus = ORDER_STATUS.map((st) => ({ st, n: sales.filter((s) => s.status === st).length }));
 
   const activeClients = useMemo(
-    () => [...clients].filter((c) => c.stage !== "Inativo").sort((a, b) => String(a.name).localeCompare(String(b.name))),
+    () => [...clients].filter((c) => c.status !== "Inativo").sort((a, b) => String(a.name).localeCompare(String(b.name))),
     [clients],
   );
 

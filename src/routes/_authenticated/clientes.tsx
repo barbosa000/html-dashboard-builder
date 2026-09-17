@@ -26,7 +26,7 @@ function ClientesPage() {
     return map;
   }, [clients, sales]);
 
-  const stageCounts = CLIENT_STAGES.map((st) => ({ st, n: clients.filter((c) => c.stage === st).length }));
+  const stageCounts = CLIENT_STAGES.map((st) => ({ st, n: clients.filter((c) => c.status === st).length }));
 
   return (
     <div>
@@ -52,7 +52,7 @@ function ClientesPage() {
             { key: "contact", label: "Contato (telefone/WhatsApp)", placeholder: "(41) 9…" },
             { key: "neighborhood", label: "Bairro" },
             { key: "city", label: "Cidade" },
-            { key: "stage", label: "Estágio", type: "select", options: CLIENT_STAGES },
+            { key: "status", label: "Estágio", type: "select", options: CLIENT_STAGES },
             { key: "frequency", label: "Frequência de compra", placeholder: "ex.: semanal" },
             { key: "notes", label: "Observações", type: "textarea", span: 4 },
           ]}
@@ -70,7 +70,7 @@ function ClientesPage() {
               label: "Último pedido",
               render: (r) => (lastOrderByClient[r.id] ? fmtDateBR(lastOrderByClient[r.id]) : "—"),
             },
-            { key: "stage", label: "Estágio", render: (r) => <Chip value={r.stage || "Lead"} /> },
+            { key: "status", label: "Estágio", render: (r) => <Chip value={r.status || "Lead"} /> },
           ]}
         />
       </div>

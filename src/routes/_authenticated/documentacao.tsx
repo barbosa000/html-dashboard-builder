@@ -13,7 +13,7 @@ function daysUntil(dateStr?: string) {
 }
 
 function DocumentacaoPage() {
-  const { rows: documents } = useCollection("documents");
+  const { rows: documents } = useCollection("licenses");
 
   const vencendo = documents.filter((d) => {
     const days = daysUntil(d['validity']);
@@ -33,7 +33,7 @@ function DocumentacaoPage() {
 
       <div className="mt-6">
         <CrudSection
-          collection="documents"
+          collection="licenses"
           title="Adicionar documento"
           listTitle="Biblioteca"
           emptyText="Nenhum documento cadastrado ainda."

@@ -115,7 +115,7 @@ function Dashboard() {
         {recent.map((s) => (
           <tr key={s.id}>
             <Td>{fmtDateBR(s.date)}</Td>
-            <Td>{clients.find((c) => c.id === s.clientId)?.name ?? s.client ?? "—"}</Td>
+            <Td>{clients.find((c) => c.id === s.clientId)?.name ?? s.clientName ?? "—"}</Td>
             <Td className="num">{numFmt(s.q2)}</Td>
             <Td className="num">{numFmt(s.q5)}</Td>
             <Td className="num">{brl(s.total)}</Td>
