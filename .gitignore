@@ -17,8 +17,9 @@ dist-ssr
 *.local
 
 # Environment variables — never commit real credentials.
-# .env is intentionally still tracked in this repo (see .env.example for
-# the reasoning) — this only stops *new* local env files from slipping in.
+# Use .env.example as the template; copy it to .env locally (or let the
+# Lovable editor manage it) and fill in real values there.
+.env
 .env.local
 .env.*.local
 .env.development
