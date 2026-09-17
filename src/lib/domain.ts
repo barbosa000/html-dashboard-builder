@@ -3,7 +3,11 @@ import type { Row } from "./store";
 /* ============ formatação ============ */
 export function brl(n: unknown) {
   const v = Number(n) || 0;
-  return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 2 });
+  return v.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    maximumFractionDigits: 2,
+  });
 }
 export function numFmt(n: unknown, d = 0) {
   return (Number(n) || 0).toLocaleString("pt-BR", { maximumFractionDigits: d });
@@ -26,7 +30,20 @@ export function monthLabel(mk: string) {
   const parts = mk.split("-");
   const y = parts[0] ?? "";
   const m = parts[1] ?? "1";
-  const names = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  const names = [
+    "jan",
+    "fev",
+    "mar",
+    "abr",
+    "mai",
+    "jun",
+    "jul",
+    "ago",
+    "set",
+    "out",
+    "nov",
+    "dez",
+  ];
   return `${names[parseInt(m, 10) - 1]}/${y.slice(2)}`;
 }
 export function addMonths(mk: string, n: number) {
@@ -104,6 +121,7 @@ export const SEGMENTS: [string, string][] = [
 ];
 
 export const CLIENT_STAGES = ["Lead", "Contato", "Negociação", "Cliente", "Recorrente", "Inativo"];
+export const REGIONS = ["Campo Magro", "Curitiba", "Região Metropolitana", "Outra"] as const;
 export const ORDER_STATUS = ["Novo", "Produção", "Saiu para entrega", "Entregue", "Cancelado"];
 export const PAYMENT_STATUS = ["Pendente", "Pago"];
 
@@ -144,7 +162,9 @@ export function lastNDays(n: number) {
   const d = new Date();
   for (let i = n - 1; i >= 0; i--) {
     const x = new Date(d.getFullYear(), d.getMonth(), d.getDate() - i);
-    out.push(`${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`);
+    out.push(
+      `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`,
+    );
   }
   return out;
 }
@@ -170,7 +190,9 @@ export function computeAlerts(ctx: {
   const target = settings.dailyTarget || 45;
   const todayProd = production.find((p) => p.date === todayStr());
   const inv = inventoryIce(production, sales);
-  const doneChecks = CHECK_ITEMS.filter(([k]) => (checklist?.[k]?.status ?? "") === "Concluído").length;
+  const doneChecks = CHECK_ITEMS.filter(
+    ([k]) => (checklist?.[k]?.status ?? "") === "Concluído",
+  ).length;
   const mSales = monthSales(sales, mk);
   const revenue = revenueOf(mSales);
   const totalCost = monthCostsTotal(costs);
@@ -178,21 +200,37 @@ export function computeAlerts(ctx: {
   const fuelPerOrder = costs?.fuel && mSales.length ? Number(costs.fuel) / mSales.length : null;
 
   if (inv.estQ2 + inv.estQ5 <= 0 && production.length > 0)
-    alerts.push({ kind: "critical", text: "Estoque de gelo zerado — produção não está cobrindo as vendas." });
+    alerts.push({
+      kind: "critical",
+      text: "Estoque de gelo zerado — produção não está cobrindo as vendas.",
+    });
   else if (inv.estQ2 + inv.estQ5 > 0 && inv.estQ2 + inv.estQ5 < 20)
     alerts.push({ kind: "warn", text: "Estoque de gelo baixo (menos de 20 sacos no total)." });
   if (!todayProd) alerts.push({ kind: "info", text: "Nenhuma produção lançada para hoje ainda." });
   else if (Number(todayProd.kg) < target * 0.8)
     alerts.push({ kind: "warn", text: "Produção de hoje abaixo de 80% da meta diária." });
   if (target >= (settings.machineCapacity || 50) * 0.95)
-    alerts.push({ kind: "warn", text: "Meta diária já próxima da capacidade nominal — avalie o gatilho da 2ª máquina." });
+    alerts.push({
+      kind: "warn",
+      text: "Meta diária já próxima da capacidade nominal — avalie o gatilho da 2ª máquina.",
+    });
   if (doneChecks < CHECK_ITEMS.length)
-    alerts.push({ kind: "critical", text: `Checklist sanitário incompleto (${doneChecks}/${CHECK_ITEMS.length}).` });
-  if (margin != null && margin < 10) alerts.push({ kind: "warn", text: "Margem do mês abaixo de 10%." });
+    alerts.push({
+      kind: "critical",
+      text: `Checklist sanitário incompleto (${doneChecks}/${CHECK_ITEMS.length}).`,
+    });
+  if (margin != null && margin < 10)
+    alerts.push({ kind: "warn", text: "Margem do mês abaixo de 10%." });
   if (fuelPerOrder != null && fuelPerOrder > 15)
-    alerts.push({ kind: "warn", text: "Custo de entrega por pedido acima de R$ 15 — revisar rotas." });
+    alerts.push({
+      kind: "warn",
+      text: "Custo de entrega por pedido acima de R$ 15 — revisar rotas.",
+    });
   if ((settings.workingCapital || 0) > 0 && settings.workingCapital < totalCost)
-    alerts.push({ kind: "critical", text: "Capital de giro disponível é menor que os custos fixos do mês." });
+    alerts.push({
+      kind: "critical",
+      text: "Capital de giro disponível é menor que os custos fixos do mês.",
+    });
 
   const now = Date.now();
   clients
@@ -205,7 +243,8 @@ export function computeAlerts(ctx: {
         .pop();
       if (last) {
         const days = Math.floor((now - new Date(last).getTime()) / 86400000);
-        if (days > 21) alerts.push({ kind: "warn", text: `Cliente "${c.name}" sem comprar há ${days} dias.` });
+        if (days > 21)
+          alerts.push({ kind: "warn", text: `Cliente "${c.name}" sem comprar há ${days} dias.` });
       }
     });
   return alerts;

@@ -4,8 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useCollection, type Row } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export type CrudField = {
   key: string;
@@ -46,11 +57,15 @@ export function CrudSection({
   columns: CrudColumn[];
   beforeSave?: (data: Record<string, any>) => Record<string, any>;
 }) {
-  const { rows, add, update, remove } = useCollection(collection);
+  const { rows, isLoading, add, update, remove } = useCollection(collection);
   const emptyForm = () =>
-    Object.fromEntries(fields.map((f) => [f.key, f.default ?? (f.type === "select" ? (f.options?.[0] ?? "") : "")]));
+    Object.fromEntries(
+      fields.map((f) => [f.key, f.default ?? (f.type === "select" ? (f.options?.[0] ?? "") : "")]),
+    );
   const [form, setForm] = useState<Record<string, any>>(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
   function reset() {
     setForm(emptyForm());
@@ -62,12 +77,33 @@ export function CrudSection({
     let data: Record<string, any> = {};
     fields.forEach((f) => {
       const v = form[f.key];
-      data[f.key] = f.type === "number" ? (v === "" || v == null ? 0 : parseFloat(String(v))) : (v ?? "");
+      data[f.key] =
+        f.type === "number" ? (v === "" || v == null ? 0 : parseFloat(String(v))) : (v ?? "");
     });
     if (beforeSave) data = beforeSave(data) ?? data;
-    if (editingId) await update(editingId, data);
-    else await add(data);
-    reset();
+    setSaving(true);
+    try {
+      if (editingId) await update(editingId, data);
+      else await add(data);
+      toast.success(editingId ? "Registro atualizado." : "Registro salvo.");
+      reset();
+    } catch {
+      // erro já reportado pelo store (toast.error)
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function confirmDelete() {
+    if (!deleteId) return;
+    const id = deleteId;
+    setDeleteId(null);
+    try {
+      await remove(id);
+      toast.success("Registro excluído.");
+    } catch {
+      // erro já reportado pelo store (toast.error)
+    }
   }
 
   return (
@@ -75,7 +111,14 @@ export function CrudSection({
       <Panel title={title} subtitle={subtitle}>
         <form onSubmit={submit} className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {fields.map((f) => (
-            <div key={f.key} className={cn("space-y-1.5", f.span === 2 && "sm:col-span-2", f.span === 4 && "sm:col-span-2 lg:col-span-4")}>
+            <div
+              key={f.key}
+              className={cn(
+                "space-y-1.5",
+                f.span === 2 && "sm:col-span-2",
+                f.span === 4 && "sm:col-span-2 lg:col-span-4",
+              )}
+            >
               <Label className="text-xs text-muted-foreground">{f.label}</Label>
               {f.type === "select" ? (
                 <select
@@ -110,7 +153,9 @@ export function CrudSection({
             </div>
           ))}
           <div className="flex items-end gap-2 sm:col-span-2">
-            <Button type="submit">{editingId ? "Salvar alterações" : addLabel}</Button>
+            <Button type="submit" disabled={saving}>
+              {saving ? "Salvando…" : editingId ? "Salvar alterações" : addLabel}
+            </Button>
             {editingId && (
               <Button type="button" variant="ghost" onClick={reset}>
                 Cancelar edição
@@ -121,7 +166,12 @@ export function CrudSection({
       </Panel>
 
       <SectionTitle hint={`${rows.length} registro(s)`}>{listTitle}</SectionTitle>
-      <DataTable columns={[...columns.map((c) => c.label), ""]} isEmpty={rows.length === 0} empty={emptyText}>
+      <DataTable
+        columns={[...columns.map((c) => c.label), ""]}
+        isEmpty={rows.length === 0}
+        empty={emptyText}
+        isLoading={isLoading}
+      >
         {rows.map((r) => (
           <tr key={r.id} className="hover:bg-surface-2/50">
             {columns.map((c) => (
@@ -139,13 +189,36 @@ export function CrudSection({
               >
                 Editar
               </Button>
-              <Button size="sm" variant="ghost" className="text-destructive" onClick={() => remove(r.id)}>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="text-destructive"
+                onClick={() => setDeleteId(r.id)}
+              >
                 Excluir
               </Button>
             </Td>
           </tr>
         ))}
       </DataTable>
+
+      <AlertDialog open={deleteId != null} onOpenChange={(open) => !open && setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir registro?</AlertDialogTitle>
+            <AlertDialogDescription>Essa ação não pode ser desfeita.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

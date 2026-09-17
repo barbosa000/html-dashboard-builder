@@ -1,5 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+function reportError(err: unknown) {
+  const message = err instanceof Error ? err.message : "Erro ao salvar. Tente novamente.";
+  toast.error(message);
+}
 
 export type Row = { id: string } & Record<string, any>;
 
@@ -32,6 +38,7 @@ export function useCollection(collection: string) {
       if (error) throw error;
     },
     onSuccess: invalidate,
+    onError: reportError,
   });
 
   const update = useMutation({
@@ -40,6 +47,7 @@ export function useCollection(collection: string) {
       if (error) throw error;
     },
     onSuccess: invalidate,
+    onError: reportError,
   });
 
   const remove = useMutation({
@@ -48,6 +56,7 @@ export function useCollection(collection: string) {
       if (error) throw error;
     },
     onSuccess: invalidate,
+    onError: reportError,
   });
 
   return {
@@ -60,7 +69,11 @@ export function useCollection(collection: string) {
 }
 
 /** Singleton documents: one row per (collection, key) — settings, monthly costs, checklist… */
-export function useDoc<T extends Record<string, any>>(collection: string, key: string, fallback: T) {
+export function useDoc<T extends Record<string, any>>(
+  collection: string,
+  key: string,
+  fallback: T,
+) {
   const qc = useQueryClient();
   const query = useQuery({
     queryKey: ["doc", collection, key],
@@ -81,11 +94,15 @@ export function useDoc<T extends Record<string, any>>(collection: string, key: s
       const next = { ...fallback, ...(query.data ?? {}), ...patch };
       const { error } = await supabase
         .from("records")
-        .upsert({ collection, doc_key: key, data: next }, { onConflict: "user_id,collection,doc_key" });
+        .upsert(
+          { collection, doc_key: key, data: next },
+          { onConflict: "user_id,collection,doc_key" },
+        );
       if (error) throw error;
       return next;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["doc", collection, key] }),
+    onError: reportError,
   });
 
   return {

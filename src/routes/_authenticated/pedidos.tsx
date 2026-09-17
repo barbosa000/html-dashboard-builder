@@ -1,10 +1,20 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { PageHeader, Panel, Kpi, Chip, DataTable, Td, SectionTitle } from "@/components/ui-kit";
+import {
+  PageHeader,
+  Panel,
+  Kpi,
+  Chip,
+  DataTable,
+  Td,
+  SectionTitle,
+  ConfirmDeleteButton,
+} from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCollection, useDoc } from "@/lib/store";
+import { toast } from "sonner";
 import {
   DEFAULT_SETTINGS,
   ORDER_STATUS,
@@ -36,7 +46,7 @@ function emptyForm(settings: typeof DEFAULT_SETTINGS) {
 }
 
 function PedidosPage() {
-  const { rows: sales, add, remove } = useCollection("sales");
+  const { rows: sales, isLoading, add, remove } = useCollection("sales");
   const { rows: clients } = useCollection("clients");
   const { data: settings } = useDoc("settings", "main", DEFAULT_SETTINGS);
   const [form, setForm] = useState(() => emptyForm(settings));
@@ -45,14 +55,25 @@ function PedidosPage() {
   const mSales = useMemo(() => monthSales(sales, mk), [sales, mk]);
   const revenue = mSales.reduce((a, s) => a + (Number(s.total) || 0), 0);
   const avgTicket = mSales.length ? revenue / mSales.length : 0;
-  const byStatus = ORDER_STATUS.map((st) => ({ st, n: sales.filter((s) => s.status === st).length }));
+  const byStatus = ORDER_STATUS.map((st) => ({
+    st,
+    n: sales.filter((s) => s.status === st).length,
+  }));
 
   const activeClients = useMemo(
-    () => [...clients].filter((c) => c.status !== "Inativo").sort((a, b) => String(a.name).localeCompare(String(b.name))),
+    () =>
+      [...clients]
+        .filter((c) => c.status !== "Inativo")
+        .sort((a, b) => String(a.name).localeCompare(String(b.name))),
     [clients],
   );
 
-  const total = Math.max(0, (parseFloat(form.q2) || 0) * (parseFloat(form.p2) || 0) + (parseFloat(form.q5) || 0) * (parseFloat(form.p5) || 0) - (parseFloat(form.desconto) || 0));
+  const total = Math.max(
+    0,
+    (parseFloat(form.q2) || 0) * (parseFloat(form.p2) || 0) +
+      (parseFloat(form.q5) || 0) * (parseFloat(form.p5) || 0) -
+      (parseFloat(form.desconto) || 0),
+  );
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -77,20 +98,31 @@ function PedidosPage() {
       status: form.status,
       payment: form.payment,
     });
+    toast.success("Pedido registrado.");
     setForm(emptyForm(settings));
   }
 
-  const sorted = useMemo(() => [...sales].sort((a, b) => String(b.date).localeCompare(String(a.date))), [sales]);
+  const sorted = useMemo(
+    () => [...sales].sort((a, b) => String(b.date).localeCompare(String(a.date))),
+    [sales],
+  );
 
   return (
     <div>
-      <PageHeader title="Pedidos" description="Registro de vendas, faturamento do mês e acompanhamento por status." />
+      <PageHeader
+        title="Pedidos"
+        description="Registro de vendas, faturamento do mês e acompanhamento por status."
+      />
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Kpi label="Faturamento do mês" value={brl(revenue)} />
         <Kpi label="Pedidos no mês" value={numFmt(mSales.length)} />
         <Kpi label="Ticket médio" value={brl(avgTicket)} />
-        <Kpi label="Pedidos pagos" value={numFmt(mSales.filter((s) => s.payment === "Pago").length)} sub={`de ${mSales.length}`} />
+        <Kpi
+          label="Pedidos pagos"
+          value={numFmt(mSales.filter((s) => s.payment === "Pago").length)}
+          sub={`de ${mSales.length}`}
+        />
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
@@ -106,7 +138,12 @@ function PedidosPage() {
         <form onSubmit={submit} className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">Data</Label>
-            <Input type="date" required value={form.date} onChange={(e) => setForm((s) => ({ ...s, date: e.target.value }))} />
+            <Input
+              type="date"
+              required
+              value={form.date}
+              onChange={(e) => setForm((s) => ({ ...s, date: e.target.value }))}
+            />
           </div>
           <div className="col-span-2 space-y-1.5">
             <Label className="text-xs text-muted-foreground">Cliente</Label>
@@ -126,23 +163,53 @@ function PedidosPage() {
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">Sacos 2 kg</Label>
-            <Input type="number" min={0} step="1" value={form.q2} onChange={(e) => setForm((s) => ({ ...s, q2: e.target.value }))} />
+            <Input
+              type="number"
+              min={0}
+              step="1"
+              value={form.q2}
+              onChange={(e) => setForm((s) => ({ ...s, q2: e.target.value }))}
+            />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">Sacos 5 kg</Label>
-            <Input type="number" min={0} step="1" value={form.q5} onChange={(e) => setForm((s) => ({ ...s, q5: e.target.value }))} />
+            <Input
+              type="number"
+              min={0}
+              step="1"
+              value={form.q5}
+              onChange={(e) => setForm((s) => ({ ...s, q5: e.target.value }))}
+            />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">Preço 2 kg (R$)</Label>
-            <Input type="number" min={0} step="0.01" value={form.p2} onChange={(e) => setForm((s) => ({ ...s, p2: e.target.value }))} />
+            <Input
+              type="number"
+              min={0}
+              step="0.01"
+              value={form.p2}
+              onChange={(e) => setForm((s) => ({ ...s, p2: e.target.value }))}
+            />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">Preço 5 kg (R$)</Label>
-            <Input type="number" min={0} step="0.01" value={form.p5} onChange={(e) => setForm((s) => ({ ...s, p5: e.target.value }))} />
+            <Input
+              type="number"
+              min={0}
+              step="0.01"
+              value={form.p5}
+              onChange={(e) => setForm((s) => ({ ...s, p5: e.target.value }))}
+            />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">Desconto (R$)</Label>
-            <Input type="number" min={0} step="0.01" value={form.desconto} onChange={(e) => setForm((s) => ({ ...s, desconto: e.target.value }))} />
+            <Input
+              type="number"
+              min={0}
+              step="0.01"
+              value={form.desconto}
+              onChange={(e) => setForm((s) => ({ ...s, desconto: e.target.value }))}
+            />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">Status</Label>
@@ -176,13 +243,19 @@ function PedidosPage() {
             <Button type="submit">Registrar pedido</Button>
           </div>
           <div className="col-span-2 flex items-end text-sm text-muted-foreground lg:col-span-4">
-            Total do pedido: <span className="num ml-1 font-semibold text-foreground">{brl(total)}</span>
+            Total do pedido:{" "}
+            <span className="num ml-1 font-semibold text-foreground">{brl(total)}</span>
           </div>
         </form>
       </Panel>
 
       <SectionTitle hint={`${sorted.length} registro(s)`}>Pedidos</SectionTitle>
-      <DataTable columns={["Data", "Cliente", "2 kg", "5 kg", "Total", "Status", "Pagamento", ""]} isEmpty={sorted.length === 0} empty="Nenhum pedido registrado ainda.">
+      <DataTable
+        columns={["Data", "Cliente", "2 kg", "5 kg", "Total", "Status", "Pagamento", ""]}
+        isEmpty={sorted.length === 0}
+        empty="Nenhum pedido registrado ainda."
+        isLoading={isLoading}
+      >
         {sorted.map((s) => (
           <tr key={s.id} className="hover:bg-surface-2/50">
             <Td>{fmtDateBR(s.date)}</Td>
@@ -197,9 +270,12 @@ function PedidosPage() {
               <Chip value={s.payment} />
             </Td>
             <Td className="text-right">
-              <Button size="sm" variant="ghost" className="text-destructive" onClick={() => remove(s.id)}>
-                Excluir
-              </Button>
+              <ConfirmDeleteButton
+                onConfirm={async () => {
+                  await remove(s.id);
+                  toast.success("Pedido excluído.");
+                }}
+              />
             </Td>
           </tr>
         ))}

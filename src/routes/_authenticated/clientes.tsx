@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Kpi, Chip } from "@/components/ui-kit";
 import { CrudSection } from "@/components/CrudSection";
 import { useCollection } from "@/lib/store";
-import { CLIENT_STAGES, SEGMENTS, fmtDateBR, numFmt } from "@/lib/domain";
+import { CLIENT_STAGES, REGIONS, SEGMENTS, fmtDateBR, numFmt } from "@/lib/domain";
 
 export const Route = createFileRoute("/_authenticated/clientes")({
   component: ClientesPage,
@@ -26,11 +26,17 @@ function ClientesPage() {
     return map;
   }, [clients, sales]);
 
-  const stageCounts = CLIENT_STAGES.map((st) => ({ st, n: clients.filter((c) => c.status === st).length }));
+  const stageCounts = CLIENT_STAGES.map((st) => ({
+    st,
+    n: clients.filter((c) => c.status === st).length,
+  }));
 
   return (
     <div>
-      <PageHeader title="Clientes" description="Cadastro de clientes e leads, com pipeline por estágio." />
+      <PageHeader
+        title="Clientes"
+        description="Cadastro de clientes e leads, com pipeline por estágio."
+      />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {stageCounts.map(({ st, n }) => (
@@ -48,8 +54,14 @@ function ClientesPage() {
           addLabel="Salvar cliente"
           fields={[
             { key: "name", label: "Nome", required: true, span: 2 },
-            { key: "segment", label: "Segmento", type: "select", options: SEGMENTS.map(([, label]) => label) },
+            {
+              key: "segment",
+              label: "Segmento",
+              type: "select",
+              options: SEGMENTS.map(([, label]) => label),
+            },
             { key: "contact", label: "Contato (telefone/WhatsApp)", placeholder: "(41) 9…" },
+            { key: "region", label: "Região", type: "select", options: [...REGIONS] },
             { key: "neighborhood", label: "Bairro" },
             { key: "city", label: "Cidade" },
             { key: "status", label: "Estágio", type: "select", options: CLIENT_STAGES },
@@ -59,6 +71,7 @@ function ClientesPage() {
           columns={[
             { key: "name", label: "Nome" },
             { key: "segment", label: "Segmento" },
+            { key: "region", label: "Região", render: (r) => r.region || "—" },
             {
               key: "local",
               label: "Bairro/Cidade",

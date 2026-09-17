@@ -1,5 +1,65 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+/* ---------- Botão de excluir com confirmação ---------- */
+export function ConfirmDeleteButton({
+  onConfirm,
+  label = "Excluir",
+  description = "Essa ação não pode ser desfeita.",
+  size = "sm",
+}: {
+  onConfirm: () => void | Promise<void>;
+  label?: string;
+  description?: string;
+  size?: "sm" | "default";
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <Button
+          type="button"
+          size={size}
+          variant="ghost"
+          className="text-destructive hover:text-destructive"
+        >
+          {label}
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Excluir registro?</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={async () => {
+              await onConfirm();
+              setOpen(false);
+            }}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            Excluir
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
 
 /* ---------- Panel / cartão base ---------- */
 export function Panel({
@@ -16,7 +76,7 @@ export function Panel({
   action?: ReactNode;
 }) {
   return (
-    <div className={cn("panel p-5", className)}>
+    <div className={cn("panel animate-in fade-in-0 duration-300 p-5", className)}>
       {(title || action) && (
         <div className="mb-3 flex items-start justify-between gap-3">
           <div>
@@ -69,7 +129,7 @@ export function Kpi({
     info: "text-info",
   }[tone];
   return (
-    <div className="panel p-4">
+    <div className="panel animate-in fade-in-0 duration-300 p-4 transition-transform hover:-translate-y-0.5">
       <div className="text-[11px] tracking-wide text-muted-foreground uppercase">{label}</div>
       <div className={cn("num mt-1.5 text-2xl font-semibold", toneClass)}>{value}</div>
       {sub && <div className="mt-1 text-xs text-muted-foreground">{sub}</div>}
@@ -129,7 +189,12 @@ export function Chip({ value, kind }: { value?: ReactNode; kind?: string }) {
       neutral: "bg-muted text-muted-foreground border-border",
     }[k] ?? "bg-muted text-muted-foreground border-border";
   return (
-    <span className={cn("inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium", cls)}>
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium",
+        cls,
+      )}
+    >
       {value == null || value === "" ? "—" : value}
     </span>
   );
@@ -154,14 +219,16 @@ export function DataTable({
   children,
   empty,
   isEmpty,
+  isLoading,
 }: {
   columns: ReactNode[];
   children: ReactNode;
   empty?: string;
   isEmpty?: boolean;
+  isLoading?: boolean;
 }) {
   return (
-    <div className="panel overflow-hidden">
+    <div className="panel animate-in fade-in-0 overflow-hidden duration-300">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
@@ -173,10 +240,25 @@ export function DataTable({
               ))}
             </tr>
           </thead>
-          <tbody className="[&>tr]:border-b [&>tr]:border-border/60 [&>tr:last-child]:border-0">{children}</tbody>
+          {!isLoading && (
+            <tbody className="[&>tr]:border-b [&>tr]:border-border/60 [&>tr:last-child]:border-0">
+              {children}
+            </tbody>
+          )}
         </table>
       </div>
-      {isEmpty && <div className="px-4 py-8 text-center text-sm text-muted-foreground">{empty ?? "Nenhum registro ainda."}</div>}
+      {isLoading && (
+        <div className="space-y-2 p-4">
+          {[0, 1, 2].map((i) => (
+            <Skeleton key={i} className="h-8 w-full" />
+          ))}
+        </div>
+      )}
+      {!isLoading && isEmpty && (
+        <div className="px-4 py-8 text-center text-sm text-muted-foreground">
+          {empty ?? "Nenhum registro ainda."}
+        </div>
+      )}
     </div>
   );
 }

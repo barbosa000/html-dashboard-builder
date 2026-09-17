@@ -1,6 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Kpi, Note, Panel, PageHeader, SectionTitle, DataTable, Td, Chip } from "@/components/ui-kit";
+import {
+  Kpi,
+  Note,
+  Panel,
+  PageHeader,
+  SectionTitle,
+  DataTable,
+  Td,
+  Chip,
+} from "@/components/ui-kit";
+import { DemandMap } from "@/components/DemandMap";
 import { useCollection, useDoc } from "@/lib/store";
 import {
   DEFAULT_SETTINGS,
@@ -48,15 +58,29 @@ function Dashboard() {
     kg: production.filter((p) => p.date === d).reduce((a, p) => a + (Number(p.kg) || 0), 0),
   }));
 
-  const recent = [...sales].sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 6);
+  const recent = [...sales]
+    .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+    .slice(0, 6);
 
   return (
     <div>
-      <PageHeader title="Dashboard" description="Visão rápida da operação, das finanças e dos alertas do mês." />
+      <PageHeader
+        title="Dashboard"
+        description="Visão rápida da operação, das finanças e dos alertas do mês."
+      />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Kpi label="Produção do mês" value={`${numFmt(kgMonth)} kg`} sub={`Meta: ${numFmt(targetMonth)} kg`} />
-        <Kpi label="Faturamento do mês" value={brl(revenue)} sub={`${mSales.length} pedido(s)`} tone="good" />
+        <Kpi
+          label="Produção do mês"
+          value={`${numFmt(kgMonth)} kg`}
+          sub={`Meta: ${numFmt(targetMonth)} kg`}
+        />
+        <Kpi
+          label="Faturamento do mês"
+          value={brl(revenue)}
+          sub={`${mSales.length} pedido(s)`}
+          tone="good"
+        />
         <Kpi label="Custos do mês" value={brl(totalCost)} sub="Custos lançados" tone="warn" />
         <Kpi
           label="Margem estimada"
@@ -71,7 +95,11 @@ function Dashboard() {
         <Kpi label="Estoque 5 kg" value={`${numFmt(inv.estQ5)} sacos`} />
         <Kpi
           label="Ocupação da capacidade"
-          value={pct(settings.machineCapacity ? ((settings.dailyTarget || 0) / settings.machineCapacity) * 100 : 0)}
+          value={pct(
+            settings.machineCapacity
+              ? ((settings.dailyTarget || 0) / settings.machineCapacity) * 100
+              : 0,
+          )}
           sub={`Capacidade: ${numFmt(settings.machineCapacity)} kg/dia`}
         />
       </div>
@@ -81,8 +109,19 @@ function Dashboard() {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-            <XAxis dataKey="dia" stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
-            <YAxis stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
+            <XAxis
+              dataKey="dia"
+              stroke="var(--muted-foreground)"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              stroke="var(--muted-foreground)"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+            />
             <Tooltip
               contentStyle={{
                 background: "var(--surface-2)",
@@ -105,6 +144,9 @@ function Dashboard() {
           </Note>
         ))}
       </div>
+
+      <SectionTitle hint="por região">Mapa de demanda de clientes</SectionTitle>
+      <DemandMap />
 
       <SectionTitle>Pedidos recentes</SectionTitle>
       <DataTable

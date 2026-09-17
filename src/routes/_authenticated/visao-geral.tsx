@@ -1,5 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { Kpi, Panel, PageHeader, SectionTitle, DataTable, Td, Note } from "@/components/ui-kit";
 import { useCollection, useDoc } from "@/lib/store";
 import {
@@ -40,24 +48,40 @@ function VisaoGeral() {
   const inv = inventoryIce(production, sales);
   const totalKg = production.reduce((a, p) => a + (Number(p.kg) || 0), 0);
   const totalRevenue = revenueOf(sales.filter((s) => s.status !== "Cancelado"));
-  const activeClients = clients.filter((c) => c.status === "Cliente" || c.status === "Recorrente").length;
-  const investTotal = investments.reduce((a, i) => a + (Number(i.actualValue) || Number(i.plannedValue) || 0), 0);
+  const activeClients = clients.filter(
+    (c) => c.status === "Cliente" || c.status === "Recorrente",
+  ).length;
+  const investTotal = investments.reduce(
+    (a, i) => a + (Number(i.actualValue) || Number(i.plannedValue) || 0),
+    0,
+  );
   const done = CHECK_ITEMS.filter(([k]) => checklist?.[k]?.status === "Concluído").length;
   const mk = currentMonthKey();
 
   return (
     <div>
-      <PageHeader title="Visão Geral" description="Panorama consolidado do negócio desde o início da operação." />
+      <PageHeader
+        title="Visão Geral"
+        description="Panorama consolidado do negócio desde o início da operação."
+      />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Kpi label="Produção acumulada" value={`${numFmt(totalKg)} kg`} />
         <Kpi label="Faturamento acumulado" value={brl(totalRevenue)} tone="good" />
-        <Kpi label="Clientes ativos" value={numFmt(activeClients)} sub={`${clients.length} cadastrados`} />
+        <Kpi
+          label="Clientes ativos"
+          value={numFmt(activeClients)}
+          sub={`${clients.length} cadastrados`}
+        />
         <Kpi label="Investimento registrado" value={brl(investTotal)} tone="info" />
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Kpi label="Estoque total" value={`${numFmt(inv.estQ2 + inv.estQ5)} sacos`} sub={`2 kg: ${numFmt(inv.estQ2)} · 5 kg: ${numFmt(inv.estQ5)}`} />
+        <Kpi
+          label="Estoque total"
+          value={`${numFmt(inv.estQ2 + inv.estQ5)} sacos`}
+          sub={`2 kg: ${numFmt(inv.estQ2)} · 5 kg: ${numFmt(inv.estQ5)}`}
+        />
         <Kpi
           label="Checklist sanitário"
           value={`${done}/${CHECK_ITEMS.length}`}
@@ -65,7 +89,11 @@ function VisaoGeral() {
         />
         <Kpi
           label="Capacidade utilizada"
-          value={pct(settings.machineCapacity ? ((settings.dailyTarget || 0) / settings.machineCapacity) * 100 : 0)}
+          value={pct(
+            settings.machineCapacity
+              ? ((settings.dailyTarget || 0) / settings.machineCapacity) * 100
+              : 0,
+          )}
         />
       </div>
 
@@ -77,8 +105,19 @@ function VisaoGeral() {
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={series}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-              <XAxis dataKey="mes" stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
+              <XAxis
+                dataKey="mes"
+                stroke="var(--muted-foreground)"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis
+                stroke="var(--muted-foreground)"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+              />
               <Tooltip
                 contentStyle={{
                   background: "var(--surface-2)",
@@ -87,8 +126,22 @@ function VisaoGeral() {
                   color: "var(--foreground)",
                 }}
               />
-              <Line type="monotone" dataKey="kg" stroke="var(--chart-1)" strokeWidth={2} dot={false} name="Produção (kg)" />
-              <Line type="monotone" dataKey="receita" stroke="var(--chart-2)" strokeWidth={2} dot={false} name="Receita (R$)" />
+              <Line
+                type="monotone"
+                dataKey="kg"
+                stroke="var(--chart-1)"
+                strokeWidth={2}
+                dot={false}
+                name="Produção (kg)"
+              />
+              <Line
+                type="monotone"
+                dataKey="receita"
+                stroke="var(--chart-2)"
+                strokeWidth={2}
+                dot={false}
+                name="Receita (R$)"
+              />
             </LineChart>
           </ResponsiveContainer>
         )}
