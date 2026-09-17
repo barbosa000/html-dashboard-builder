@@ -10,33 +10,425 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedCenariosRouteImport } from './routes/_authenticated/cenarios'
+import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated/clientes'
+import { Route as AuthenticatedComercialRouteImport } from './routes/_authenticated/comercial'
+import { Route as AuthenticatedConcorrentesRouteImport } from './routes/_authenticated/concorrentes'
+import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
+import { Route as AuthenticatedCustosRouteImport } from './routes/_authenticated/custos'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDocumentacaoRouteImport } from './routes/_authenticated/documentacao'
+import { Route as AuthenticatedEntregasRouteImport } from './routes/_authenticated/entregas'
+import { Route as AuthenticatedEquipamentosRouteImport } from './routes/_authenticated/equipamentos'
+import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated/estoque'
+import { Route as AuthenticatedExpansaoRouteImport } from './routes/_authenticated/expansao'
+import { Route as AuthenticatedFaturamentoRouteImport } from './routes/_authenticated/faturamento'
+import { Route as AuthenticatedFluxoCaixaRouteImport } from './routes/_authenticated/fluxo-caixa'
+import { Route as AuthenticatedFontesRouteImport } from './routes/_authenticated/fontes'
+import { Route as AuthenticatedIndicadoresRouteImport } from './routes/_authenticated/indicadores'
+import { Route as AuthenticatedInvestimentosRouteImport } from './routes/_authenticated/investimentos'
+import { Route as AuthenticatedMargensRouteImport } from './routes/_authenticated/margens'
+import { Route as AuthenticatedMercadoRouteImport } from './routes/_authenticated/mercado'
+import { Route as AuthenticatedMetasRouteImport } from './routes/_authenticated/metas'
+import { Route as AuthenticatedPedidosRouteImport } from './routes/_authenticated/pedidos'
+import { Route as AuthenticatedPesquisasRouteImport } from './routes/_authenticated/pesquisas'
+import { Route as AuthenticatedPremissasRouteImport } from './routes/_authenticated/premissas'
+import { Route as AuthenticatedProducaoRouteImport } from './routes/_authenticated/producao'
+import { Route as AuthenticatedRiscosRouteImport } from './routes/_authenticated/riscos'
+import { Route as AuthenticatedRoadmapRouteImport } from './routes/_authenticated/roadmap'
+import { Route as AuthenticatedSanitarioRouteImport } from './routes/_authenticated/sanitario'
+import { Route as AuthenticatedSimuladorRouteImport } from './routes/_authenticated/simulador'
+import { Route as AuthenticatedSociosRouteImport } from './routes/_authenticated/socios'
+import { Route as AuthenticatedVisaoGeralRouteImport } from './routes/_authenticated/visao-geral'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedCenariosRoute = AuthenticatedCenariosRouteImport.update({
+  id: '/cenarios',
+  path: '/cenarios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedClientesRoute = AuthenticatedClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedComercialRoute = AuthenticatedComercialRouteImport.update({
+  id: '/comercial',
+  path: '/comercial',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedConcorrentesRoute =
+  AuthenticatedConcorrentesRouteImport.update({
+    id: '/concorrentes',
+    path: '/concorrentes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedConfiguracoesRoute =
+  AuthenticatedConfiguracoesRouteImport.update({
+    id: '/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCustosRoute = AuthenticatedCustosRouteImport.update({
+  id: '/custos',
+  path: '/custos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDocumentacaoRoute =
+  AuthenticatedDocumentacaoRouteImport.update({
+    id: '/documentacao',
+    path: '/documentacao',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEntregasRoute = AuthenticatedEntregasRouteImport.update({
+  id: '/entregas',
+  path: '/entregas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEquipamentosRoute =
+  AuthenticatedEquipamentosRouteImport.update({
+    id: '/equipamentos',
+    path: '/equipamentos',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEstoqueRoute = AuthenticatedEstoqueRouteImport.update({
+  id: '/estoque',
+  path: '/estoque',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedExpansaoRoute = AuthenticatedExpansaoRouteImport.update({
+  id: '/expansao',
+  path: '/expansao',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFaturamentoRoute =
+  AuthenticatedFaturamentoRouteImport.update({
+    id: '/faturamento',
+    path: '/faturamento',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFluxoCaixaRoute = AuthenticatedFluxoCaixaRouteImport.update({
+  id: '/fluxo-caixa',
+  path: '/fluxo-caixa',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFontesRoute = AuthenticatedFontesRouteImport.update({
+  id: '/fontes',
+  path: '/fontes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedIndicadoresRoute =
+  AuthenticatedIndicadoresRouteImport.update({
+    id: '/indicadores',
+    path: '/indicadores',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInvestimentosRoute =
+  AuthenticatedInvestimentosRouteImport.update({
+    id: '/investimentos',
+    path: '/investimentos',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMargensRoute = AuthenticatedMargensRouteImport.update({
+  id: '/margens',
+  path: '/margens',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMercadoRoute = AuthenticatedMercadoRouteImport.update({
+  id: '/mercado',
+  path: '/mercado',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMetasRoute = AuthenticatedMetasRouteImport.update({
+  id: '/metas',
+  path: '/metas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPedidosRoute = AuthenticatedPedidosRouteImport.update({
+  id: '/pedidos',
+  path: '/pedidos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPesquisasRoute = AuthenticatedPesquisasRouteImport.update({
+  id: '/pesquisas',
+  path: '/pesquisas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPremissasRoute = AuthenticatedPremissasRouteImport.update({
+  id: '/premissas',
+  path: '/premissas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProducaoRoute = AuthenticatedProducaoRouteImport.update({
+  id: '/producao',
+  path: '/producao',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRiscosRoute = AuthenticatedRiscosRouteImport.update({
+  id: '/riscos',
+  path: '/riscos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRoadmapRoute = AuthenticatedRoadmapRouteImport.update({
+  id: '/roadmap',
+  path: '/roadmap',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSanitarioRoute = AuthenticatedSanitarioRouteImport.update({
+  id: '/sanitario',
+  path: '/sanitario',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSimuladorRoute = AuthenticatedSimuladorRouteImport.update({
+  id: '/simulador',
+  path: '/simulador',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSociosRoute = AuthenticatedSociosRouteImport.update({
+  id: '/socios',
+  path: '/socios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedVisaoGeralRoute = AuthenticatedVisaoGeralRouteImport.update({
+  id: '/visao-geral',
+  path: '/visao-geral',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/cenarios': typeof AuthenticatedCenariosRoute
+  '/clientes': typeof AuthenticatedClientesRoute
+  '/comercial': typeof AuthenticatedComercialRoute
+  '/concorrentes': typeof AuthenticatedConcorrentesRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/custos': typeof AuthenticatedCustosRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/documentacao': typeof AuthenticatedDocumentacaoRoute
+  '/entregas': typeof AuthenticatedEntregasRoute
+  '/equipamentos': typeof AuthenticatedEquipamentosRoute
+  '/estoque': typeof AuthenticatedEstoqueRoute
+  '/expansao': typeof AuthenticatedExpansaoRoute
+  '/faturamento': typeof AuthenticatedFaturamentoRoute
+  '/fluxo-caixa': typeof AuthenticatedFluxoCaixaRoute
+  '/fontes': typeof AuthenticatedFontesRoute
+  '/indicadores': typeof AuthenticatedIndicadoresRoute
+  '/investimentos': typeof AuthenticatedInvestimentosRoute
+  '/margens': typeof AuthenticatedMargensRoute
+  '/mercado': typeof AuthenticatedMercadoRoute
+  '/metas': typeof AuthenticatedMetasRoute
+  '/pedidos': typeof AuthenticatedPedidosRoute
+  '/pesquisas': typeof AuthenticatedPesquisasRoute
+  '/premissas': typeof AuthenticatedPremissasRoute
+  '/producao': typeof AuthenticatedProducaoRoute
+  '/riscos': typeof AuthenticatedRiscosRoute
+  '/roadmap': typeof AuthenticatedRoadmapRoute
+  '/sanitario': typeof AuthenticatedSanitarioRoute
+  '/simulador': typeof AuthenticatedSimuladorRoute
+  '/socios': typeof AuthenticatedSociosRoute
+  '/visao-geral': typeof AuthenticatedVisaoGeralRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/cenarios': typeof AuthenticatedCenariosRoute
+  '/clientes': typeof AuthenticatedClientesRoute
+  '/comercial': typeof AuthenticatedComercialRoute
+  '/concorrentes': typeof AuthenticatedConcorrentesRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/custos': typeof AuthenticatedCustosRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/documentacao': typeof AuthenticatedDocumentacaoRoute
+  '/entregas': typeof AuthenticatedEntregasRoute
+  '/equipamentos': typeof AuthenticatedEquipamentosRoute
+  '/estoque': typeof AuthenticatedEstoqueRoute
+  '/expansao': typeof AuthenticatedExpansaoRoute
+  '/faturamento': typeof AuthenticatedFaturamentoRoute
+  '/fluxo-caixa': typeof AuthenticatedFluxoCaixaRoute
+  '/fontes': typeof AuthenticatedFontesRoute
+  '/indicadores': typeof AuthenticatedIndicadoresRoute
+  '/investimentos': typeof AuthenticatedInvestimentosRoute
+  '/margens': typeof AuthenticatedMargensRoute
+  '/mercado': typeof AuthenticatedMercadoRoute
+  '/metas': typeof AuthenticatedMetasRoute
+  '/pedidos': typeof AuthenticatedPedidosRoute
+  '/pesquisas': typeof AuthenticatedPesquisasRoute
+  '/premissas': typeof AuthenticatedPremissasRoute
+  '/producao': typeof AuthenticatedProducaoRoute
+  '/riscos': typeof AuthenticatedRiscosRoute
+  '/roadmap': typeof AuthenticatedRoadmapRoute
+  '/sanitario': typeof AuthenticatedSanitarioRoute
+  '/simulador': typeof AuthenticatedSimuladorRoute
+  '/socios': typeof AuthenticatedSociosRoute
+  '/visao-geral': typeof AuthenticatedVisaoGeralRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/cenarios': typeof AuthenticatedCenariosRoute
+  '/_authenticated/clientes': typeof AuthenticatedClientesRoute
+  '/_authenticated/comercial': typeof AuthenticatedComercialRoute
+  '/_authenticated/concorrentes': typeof AuthenticatedConcorrentesRoute
+  '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/_authenticated/custos': typeof AuthenticatedCustosRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/documentacao': typeof AuthenticatedDocumentacaoRoute
+  '/_authenticated/entregas': typeof AuthenticatedEntregasRoute
+  '/_authenticated/equipamentos': typeof AuthenticatedEquipamentosRoute
+  '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
+  '/_authenticated/expansao': typeof AuthenticatedExpansaoRoute
+  '/_authenticated/faturamento': typeof AuthenticatedFaturamentoRoute
+  '/_authenticated/fluxo-caixa': typeof AuthenticatedFluxoCaixaRoute
+  '/_authenticated/fontes': typeof AuthenticatedFontesRoute
+  '/_authenticated/indicadores': typeof AuthenticatedIndicadoresRoute
+  '/_authenticated/investimentos': typeof AuthenticatedInvestimentosRoute
+  '/_authenticated/margens': typeof AuthenticatedMargensRoute
+  '/_authenticated/mercado': typeof AuthenticatedMercadoRoute
+  '/_authenticated/metas': typeof AuthenticatedMetasRoute
+  '/_authenticated/pedidos': typeof AuthenticatedPedidosRoute
+  '/_authenticated/pesquisas': typeof AuthenticatedPesquisasRoute
+  '/_authenticated/premissas': typeof AuthenticatedPremissasRoute
+  '/_authenticated/producao': typeof AuthenticatedProducaoRoute
+  '/_authenticated/riscos': typeof AuthenticatedRiscosRoute
+  '/_authenticated/roadmap': typeof AuthenticatedRoadmapRoute
+  '/_authenticated/sanitario': typeof AuthenticatedSanitarioRoute
+  '/_authenticated/simulador': typeof AuthenticatedSimuladorRoute
+  '/_authenticated/socios': typeof AuthenticatedSociosRoute
+  '/_authenticated/visao-geral': typeof AuthenticatedVisaoGeralRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/cenarios'
+    | '/clientes'
+    | '/comercial'
+    | '/concorrentes'
+    | '/configuracoes'
+    | '/custos'
+    | '/dashboard'
+    | '/documentacao'
+    | '/entregas'
+    | '/equipamentos'
+    | '/estoque'
+    | '/expansao'
+    | '/faturamento'
+    | '/fluxo-caixa'
+    | '/fontes'
+    | '/indicadores'
+    | '/investimentos'
+    | '/margens'
+    | '/mercado'
+    | '/metas'
+    | '/pedidos'
+    | '/pesquisas'
+    | '/premissas'
+    | '/producao'
+    | '/riscos'
+    | '/roadmap'
+    | '/sanitario'
+    | '/simulador'
+    | '/socios'
+    | '/visao-geral'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/cenarios'
+    | '/clientes'
+    | '/comercial'
+    | '/concorrentes'
+    | '/configuracoes'
+    | '/custos'
+    | '/dashboard'
+    | '/documentacao'
+    | '/entregas'
+    | '/equipamentos'
+    | '/estoque'
+    | '/expansao'
+    | '/faturamento'
+    | '/fluxo-caixa'
+    | '/fontes'
+    | '/indicadores'
+    | '/investimentos'
+    | '/margens'
+    | '/mercado'
+    | '/metas'
+    | '/pedidos'
+    | '/pesquisas'
+    | '/premissas'
+    | '/producao'
+    | '/riscos'
+    | '/roadmap'
+    | '/sanitario'
+    | '/simulador'
+    | '/socios'
+    | '/visao-geral'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/cenarios'
+    | '/_authenticated/clientes'
+    | '/_authenticated/comercial'
+    | '/_authenticated/concorrentes'
+    | '/_authenticated/configuracoes'
+    | '/_authenticated/custos'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/documentacao'
+    | '/_authenticated/entregas'
+    | '/_authenticated/equipamentos'
+    | '/_authenticated/estoque'
+    | '/_authenticated/expansao'
+    | '/_authenticated/faturamento'
+    | '/_authenticated/fluxo-caixa'
+    | '/_authenticated/fontes'
+    | '/_authenticated/indicadores'
+    | '/_authenticated/investimentos'
+    | '/_authenticated/margens'
+    | '/_authenticated/mercado'
+    | '/_authenticated/metas'
+    | '/_authenticated/pedidos'
+    | '/_authenticated/pesquisas'
+    | '/_authenticated/premissas'
+    | '/_authenticated/producao'
+    | '/_authenticated/riscos'
+    | '/_authenticated/roadmap'
+    | '/_authenticated/sanitario'
+    | '/_authenticated/simulador'
+    | '/_authenticated/socios'
+    | '/_authenticated/visao-geral'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +440,306 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/cenarios': {
+      id: '/_authenticated/cenarios'
+      path: '/cenarios'
+      fullPath: '/cenarios'
+      preLoaderRoute: typeof AuthenticatedCenariosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/clientes': {
+      id: '/_authenticated/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof AuthenticatedClientesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/comercial': {
+      id: '/_authenticated/comercial'
+      path: '/comercial'
+      fullPath: '/comercial'
+      preLoaderRoute: typeof AuthenticatedComercialRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/concorrentes': {
+      id: '/_authenticated/concorrentes'
+      path: '/concorrentes'
+      fullPath: '/concorrentes'
+      preLoaderRoute: typeof AuthenticatedConcorrentesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/configuracoes': {
+      id: '/_authenticated/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof AuthenticatedConfiguracoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/custos': {
+      id: '/_authenticated/custos'
+      path: '/custos'
+      fullPath: '/custos'
+      preLoaderRoute: typeof AuthenticatedCustosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/documentacao': {
+      id: '/_authenticated/documentacao'
+      path: '/documentacao'
+      fullPath: '/documentacao'
+      preLoaderRoute: typeof AuthenticatedDocumentacaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/entregas': {
+      id: '/_authenticated/entregas'
+      path: '/entregas'
+      fullPath: '/entregas'
+      preLoaderRoute: typeof AuthenticatedEntregasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/equipamentos': {
+      id: '/_authenticated/equipamentos'
+      path: '/equipamentos'
+      fullPath: '/equipamentos'
+      preLoaderRoute: typeof AuthenticatedEquipamentosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estoque': {
+      id: '/_authenticated/estoque'
+      path: '/estoque'
+      fullPath: '/estoque'
+      preLoaderRoute: typeof AuthenticatedEstoqueRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/expansao': {
+      id: '/_authenticated/expansao'
+      path: '/expansao'
+      fullPath: '/expansao'
+      preLoaderRoute: typeof AuthenticatedExpansaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/faturamento': {
+      id: '/_authenticated/faturamento'
+      path: '/faturamento'
+      fullPath: '/faturamento'
+      preLoaderRoute: typeof AuthenticatedFaturamentoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fluxo-caixa': {
+      id: '/_authenticated/fluxo-caixa'
+      path: '/fluxo-caixa'
+      fullPath: '/fluxo-caixa'
+      preLoaderRoute: typeof AuthenticatedFluxoCaixaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fontes': {
+      id: '/_authenticated/fontes'
+      path: '/fontes'
+      fullPath: '/fontes'
+      preLoaderRoute: typeof AuthenticatedFontesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/indicadores': {
+      id: '/_authenticated/indicadores'
+      path: '/indicadores'
+      fullPath: '/indicadores'
+      preLoaderRoute: typeof AuthenticatedIndicadoresRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/investimentos': {
+      id: '/_authenticated/investimentos'
+      path: '/investimentos'
+      fullPath: '/investimentos'
+      preLoaderRoute: typeof AuthenticatedInvestimentosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/margens': {
+      id: '/_authenticated/margens'
+      path: '/margens'
+      fullPath: '/margens'
+      preLoaderRoute: typeof AuthenticatedMargensRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mercado': {
+      id: '/_authenticated/mercado'
+      path: '/mercado'
+      fullPath: '/mercado'
+      preLoaderRoute: typeof AuthenticatedMercadoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/metas': {
+      id: '/_authenticated/metas'
+      path: '/metas'
+      fullPath: '/metas'
+      preLoaderRoute: typeof AuthenticatedMetasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pedidos': {
+      id: '/_authenticated/pedidos'
+      path: '/pedidos'
+      fullPath: '/pedidos'
+      preLoaderRoute: typeof AuthenticatedPedidosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pesquisas': {
+      id: '/_authenticated/pesquisas'
+      path: '/pesquisas'
+      fullPath: '/pesquisas'
+      preLoaderRoute: typeof AuthenticatedPesquisasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/premissas': {
+      id: '/_authenticated/premissas'
+      path: '/premissas'
+      fullPath: '/premissas'
+      preLoaderRoute: typeof AuthenticatedPremissasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/producao': {
+      id: '/_authenticated/producao'
+      path: '/producao'
+      fullPath: '/producao'
+      preLoaderRoute: typeof AuthenticatedProducaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/riscos': {
+      id: '/_authenticated/riscos'
+      path: '/riscos'
+      fullPath: '/riscos'
+      preLoaderRoute: typeof AuthenticatedRiscosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/roadmap': {
+      id: '/_authenticated/roadmap'
+      path: '/roadmap'
+      fullPath: '/roadmap'
+      preLoaderRoute: typeof AuthenticatedRoadmapRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sanitario': {
+      id: '/_authenticated/sanitario'
+      path: '/sanitario'
+      fullPath: '/sanitario'
+      preLoaderRoute: typeof AuthenticatedSanitarioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/simulador': {
+      id: '/_authenticated/simulador'
+      path: '/simulador'
+      fullPath: '/simulador'
+      preLoaderRoute: typeof AuthenticatedSimuladorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/socios': {
+      id: '/_authenticated/socios'
+      path: '/socios'
+      fullPath: '/socios'
+      preLoaderRoute: typeof AuthenticatedSociosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/visao-geral': {
+      id: '/_authenticated/visao-geral'
+      path: '/visao-geral'
+      fullPath: '/visao-geral'
+      preLoaderRoute: typeof AuthenticatedVisaoGeralRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCenariosRoute: typeof AuthenticatedCenariosRoute
+  AuthenticatedClientesRoute: typeof AuthenticatedClientesRoute
+  AuthenticatedComercialRoute: typeof AuthenticatedComercialRoute
+  AuthenticatedConcorrentesRoute: typeof AuthenticatedConcorrentesRoute
+  AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
+  AuthenticatedCustosRoute: typeof AuthenticatedCustosRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDocumentacaoRoute: typeof AuthenticatedDocumentacaoRoute
+  AuthenticatedEntregasRoute: typeof AuthenticatedEntregasRoute
+  AuthenticatedEquipamentosRoute: typeof AuthenticatedEquipamentosRoute
+  AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
+  AuthenticatedExpansaoRoute: typeof AuthenticatedExpansaoRoute
+  AuthenticatedFaturamentoRoute: typeof AuthenticatedFaturamentoRoute
+  AuthenticatedFluxoCaixaRoute: typeof AuthenticatedFluxoCaixaRoute
+  AuthenticatedFontesRoute: typeof AuthenticatedFontesRoute
+  AuthenticatedIndicadoresRoute: typeof AuthenticatedIndicadoresRoute
+  AuthenticatedInvestimentosRoute: typeof AuthenticatedInvestimentosRoute
+  AuthenticatedMargensRoute: typeof AuthenticatedMargensRoute
+  AuthenticatedMercadoRoute: typeof AuthenticatedMercadoRoute
+  AuthenticatedMetasRoute: typeof AuthenticatedMetasRoute
+  AuthenticatedPedidosRoute: typeof AuthenticatedPedidosRoute
+  AuthenticatedPesquisasRoute: typeof AuthenticatedPesquisasRoute
+  AuthenticatedPremissasRoute: typeof AuthenticatedPremissasRoute
+  AuthenticatedProducaoRoute: typeof AuthenticatedProducaoRoute
+  AuthenticatedRiscosRoute: typeof AuthenticatedRiscosRoute
+  AuthenticatedRoadmapRoute: typeof AuthenticatedRoadmapRoute
+  AuthenticatedSanitarioRoute: typeof AuthenticatedSanitarioRoute
+  AuthenticatedSimuladorRoute: typeof AuthenticatedSimuladorRoute
+  AuthenticatedSociosRoute: typeof AuthenticatedSociosRoute
+  AuthenticatedVisaoGeralRoute: typeof AuthenticatedVisaoGeralRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCenariosRoute: AuthenticatedCenariosRoute,
+  AuthenticatedClientesRoute: AuthenticatedClientesRoute,
+  AuthenticatedComercialRoute: AuthenticatedComercialRoute,
+  AuthenticatedConcorrentesRoute: AuthenticatedConcorrentesRoute,
+  AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
+  AuthenticatedCustosRoute: AuthenticatedCustosRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDocumentacaoRoute: AuthenticatedDocumentacaoRoute,
+  AuthenticatedEntregasRoute: AuthenticatedEntregasRoute,
+  AuthenticatedEquipamentosRoute: AuthenticatedEquipamentosRoute,
+  AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
+  AuthenticatedExpansaoRoute: AuthenticatedExpansaoRoute,
+  AuthenticatedFaturamentoRoute: AuthenticatedFaturamentoRoute,
+  AuthenticatedFluxoCaixaRoute: AuthenticatedFluxoCaixaRoute,
+  AuthenticatedFontesRoute: AuthenticatedFontesRoute,
+  AuthenticatedIndicadoresRoute: AuthenticatedIndicadoresRoute,
+  AuthenticatedInvestimentosRoute: AuthenticatedInvestimentosRoute,
+  AuthenticatedMargensRoute: AuthenticatedMargensRoute,
+  AuthenticatedMercadoRoute: AuthenticatedMercadoRoute,
+  AuthenticatedMetasRoute: AuthenticatedMetasRoute,
+  AuthenticatedPedidosRoute: AuthenticatedPedidosRoute,
+  AuthenticatedPesquisasRoute: AuthenticatedPesquisasRoute,
+  AuthenticatedPremissasRoute: AuthenticatedPremissasRoute,
+  AuthenticatedProducaoRoute: AuthenticatedProducaoRoute,
+  AuthenticatedRiscosRoute: AuthenticatedRiscosRoute,
+  AuthenticatedRoadmapRoute: AuthenticatedRoadmapRoute,
+  AuthenticatedSanitarioRoute: AuthenticatedSanitarioRoute,
+  AuthenticatedSimuladorRoute: AuthenticatedSimuladorRoute,
+  AuthenticatedSociosRoute: AuthenticatedSociosRoute,
+  AuthenticatedVisaoGeralRoute: AuthenticatedVisaoGeralRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

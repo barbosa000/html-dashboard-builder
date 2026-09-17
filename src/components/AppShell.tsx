@@ -1,0 +1,94 @@
+import { useState, type ReactNode } from "react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { NAV, LABEL_BY_SLUG } from "@/lib/nav";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Menu, X, LogOut } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+
+export function AppShell({ children }: { children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const qc = useQueryClient();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const slug = pathname.split("/").filter(Boolean)[0] ?? "dashboard";
+
+  async function signOut() {
+    await qc.cancelQueries();
+    qc.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
+
+  const today = new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" });
+
+  return (
+    <div className="flex min-h-screen">
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 w-[264px] overflow-y-auto border-r border-sidebar-border bg-sidebar px-4 py-5 transition-transform lg:static lg:translate-x-0",
+          open ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
+        <div className="mb-6 flex items-center gap-3">
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent text-sm font-bold text-primary-foreground">
+            PG
+          </span>
+          <span className="leading-tight">
+            <span className="block font-display text-sm font-semibold">OS PIA do Gelo</span>
+            <span className="block text-xs text-muted-foreground">Gestão Inteligente</span>
+          </span>
+          <button className="ml-auto lg:hidden" onClick={() => setOpen(false)} aria-label="Fechar menu">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {NAV.map((group) => (
+          <div key={group.label} className="mb-5">
+            <div className="mb-1.5 px-2 text-[10px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+              {group.label}
+            </div>
+            <nav className="space-y-0.5">
+              {group.items.map((item) => (
+                <Link
+                  key={item.slug}
+                  to={`/${item.slug}` as string}
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-colors",
+                    slug === item.slug
+                      ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
+                      : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
+                  )}
+                >
+                  <span
+                    className={cn("h-1.5 w-1.5 rounded-full", slug === item.slug ? "bg-primary" : "bg-border-strong")}
+                  />
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        ))}
+
+        <Button variant="ghost" className="w-full justify-start gap-2 text-muted-foreground" onClick={signOut}>
+          <LogOut className="h-4 w-4" /> Sair
+        </Button>
+      </aside>
+
+      {open && <div className="fixed inset-0 z-30 bg-black/50 lg:hidden" onClick={() => setOpen(false)} />}
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-background/80 px-4 py-3 backdrop-blur lg:px-8">
+          <button className="lg:hidden" onClick={() => setOpen(true)} aria-label="Abrir menu">
+            <Menu className="h-5 w-5" />
+          </button>
+          <h2 className="font-display text-base font-semibold">{LABEL_BY_SLUG[slug] ?? "Painel"}</h2>
+          <div className="ml-auto hidden text-xs text-muted-foreground capitalize sm:block">{today}</div>
+        </header>
+        <main className="min-w-0 flex-1 px-4 py-6 lg:px-8">{children}</main>
+      </div>
+    </div>
+  );
+}
