@@ -75,7 +75,7 @@ function RiscosPage() {
                 labelFormatter={() => ""}
                 content={({ active, payload }) => {
                   if (!active || !payload?.length) return null;
-                  const p = payload[0].payload;
+                  const p = (payload[0] as any)?.payload ?? {};
                   return (
                     <div className="rounded-md border border-border bg-surface-solid px-3 py-2 text-xs">
                       Probabilidade: {probLabel(p.x)} · Impacto: {impLabel(p.y)} · {p.count} risco(s)
